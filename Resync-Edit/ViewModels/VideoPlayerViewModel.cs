@@ -116,6 +116,7 @@ namespace Resync_Edit.ViewModels
 
         public VideoPlayerViewModel()
         {
+            Volume = 1;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
