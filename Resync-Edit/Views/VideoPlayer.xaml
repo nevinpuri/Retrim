@@ -5,18 +5,31 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
       xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+      xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:local="clr-namespace:Resync_Edit.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="9*"></RowDefinition>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
-            <Button controls:Panel.ZIndex="99" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}" Content="Play"></Button>
-            <Button Command="{Binding PauseRequestedCommand}" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}" Content="Pause"></Button>
+        <Grid Grid.Row="2" Background="Gray" Opacity="0.5">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button controls:Panel.ZIndex="99" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
+                <ui:SymbolIcon Symbol="Play"></ui:SymbolIcon>
+            </Button>
+            <Button Command="{Binding PauseRequestedCommand}" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}">
+                <ui:SymbolIcon Symbol="Pause"></ui:SymbolIcon>
+            </Button>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button>
+                <ui:SymbolIcon Symbol="Volume"></ui:SymbolIcon>
+            </Button>
+        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

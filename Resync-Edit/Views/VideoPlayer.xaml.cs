@@ -48,8 +48,15 @@ namespace Resync_Edit.Views
 
         private async void Media_Loaded(object sender, RoutedEventArgs e)
         {
-            await Media.Open(new Uri(vm.CurrentVideo));
-            await Media.Play();
+            if (!(vm.CurrentVideo is null))
+            {
+                await Media.Open(new Uri(vm.CurrentVideo));
+                await Media.Play();
+            }
+            else
+            {
+                MessageBox.Show("Error: No Video");
+            }
         }
     }
 }
