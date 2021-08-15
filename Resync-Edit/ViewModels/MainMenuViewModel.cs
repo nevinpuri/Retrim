@@ -22,11 +22,11 @@ namespace Resync_Edit.ViewModels
         public MainMenuViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            MessageBox.Show(Environment.GetCommandLineArgs()[0]);
         }
 
         private void FileSelect_Execute()
         {
+            _regionManager.RequestNavigate("ContentRegion", "VideoPlayer");
         }
 
     }

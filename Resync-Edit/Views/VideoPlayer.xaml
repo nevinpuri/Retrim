@@ -8,6 +8,6 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ffme:MediaElement x:Name="Media" LoadedBehavior="Play" UnloadedBehavior="Manual"></ffme:MediaElement>
+        <ffme:MediaElement Grid.Column="0" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
     </Grid>
 </UserControl>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,6 +27,27 @@ namespace Resync_Edit.Views
         {
             InitializeComponent();
             this.DataContext = vm;
+            vm.PlayRequested += MediaPlayer_PlayRequested;
+            vm.PauseRequested += MediaPlayer_PauseRequested;
+            vm.CloseRequested += MediaPlayer_CloseRequested;
+        }
+        private async void MediaPlayer_PlayRequested(object sender, EventArgs e)
+        {
+        }
+
+        private async void MediaPlayer_PauseRequested(object sender, EventArgs e)
+        {
+        }
+
+        private async void MediaPlayer_CloseRequested(object sender, EventArgs e)
+        {
+        }
+
+        private async void Media_Loaded(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(vm.CurrentVideo);
+            await Media.Open(new Uri(vm.CurrentVideo));
+            await Media.Play();
         }
     }
 }

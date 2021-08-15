@@ -26,6 +26,7 @@ namespace Resync_Edit
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<MainMenu>();
+            containerRegistry.RegisterForNavigation<VideoPlayer>();
         }
 
         protected override Window CreateShell()

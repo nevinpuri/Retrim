@@ -29,12 +29,12 @@ namespace Resync_Edit.ViewModels
         {
             string[] commandLineArgs = Environment.GetCommandLineArgs(); // [a-zA-Z]:[\\\/](?:[a-zA-Z0-9]+[\\\/])*([a-zA-Z0-9]+.*)
             commandLineArgs = commandLineArgs.Skip(1).ToArray(); // to only get videos
-            if (Environment.GetCommandLineArgs().Length < 1)
+            if (commandLineArgs.Length < 1)
                 _regionManager.RequestNavigate("ContentRegion", "MainMenu");
             else
             {
                 var navigationParameters = new NavigationParameters();
-                navigationParameters.Add("UserVideos", commandLineArgs);
+                navigationParameters.Add("UserVideos", commandLineArgs[0]);
                 _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
             }
         }
