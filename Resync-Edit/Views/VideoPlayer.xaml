@@ -18,6 +18,10 @@
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
         <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
+        <Grid Grid.Row="1" Background="Gray">
+            <Slider Minimum="0" Maximum="10" Margin="0, 0, 10, 0"></Slider>
+            <Slider Minimum="0" Maximum="10" Margin="10, 0, 0, 0"></Slider>
+        </Grid>
         <Grid Grid.Row="2" Background="Transparent" Opacity="0.7">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
             <Button controls:Panel.ZIndex="99" Background="Transparent" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
