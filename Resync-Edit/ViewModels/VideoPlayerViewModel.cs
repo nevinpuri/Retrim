@@ -17,9 +17,9 @@ namespace Resync_Edit.ViewModels
 
         private string _videoLocation;
 
-        private bool _play;
+        private bool _play = false;
 
-        private bool _pause;
+        private bool _pause = true;
 
         private string _currentVideo;
 
@@ -90,7 +90,10 @@ namespace Resync_Edit.ViewModels
 
         private void CloseRequested_Execute()
         {
-
+            if (!(PauseRequested is null))
+            {
+                CloseRequested(this, EventArgs.Empty);
+            }
         }
 
         public VideoPlayerViewModel()
@@ -100,7 +103,6 @@ namespace Resync_Edit.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             VideoLocation = (string) navigationContext.Parameters["UserVideos"];
-            MessageBox.Show(VideoLocation);
             CurrentVideo = VideoLocation;
         }
 

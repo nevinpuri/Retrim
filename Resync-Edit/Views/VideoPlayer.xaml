@@ -4,10 +4,19 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
+      xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
       xmlns:local="clr-namespace:Resync_Edit.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <ffme:MediaElement Grid.Column="0" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button controls:Panel.ZIndex="99" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}" Content="Play"></Button>
+            <Button Command="{Binding PauseRequestedCommand}" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}" Content="Pause"></Button>
+        </StackPanel>
     </Grid>
 </UserControl>

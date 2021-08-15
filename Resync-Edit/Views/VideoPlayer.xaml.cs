@@ -33,19 +33,21 @@ namespace Resync_Edit.Views
         }
         private async void MediaPlayer_PlayRequested(object sender, EventArgs e)
         {
+            await Media.Play();
         }
 
         private async void MediaPlayer_PauseRequested(object sender, EventArgs e)
         {
+            await Media.Pause();
         }
 
         private async void MediaPlayer_CloseRequested(object sender, EventArgs e)
         {
+            await Media.Close();
         }
 
         private async void Media_Loaded(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(vm.CurrentVideo);
             await Media.Open(new Uri(vm.CurrentVideo));
             await Media.Play();
         }

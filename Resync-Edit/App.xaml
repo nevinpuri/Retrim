@@ -11,6 +11,7 @@
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter"></BooleanToVisibilityConverter>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>
