@@ -30,6 +30,7 @@ namespace Resync_Edit.Views
             vm.PlayRequested += MediaPlayer_PlayRequested;
             vm.PauseRequested += MediaPlayer_PauseRequested;
             vm.CloseRequested += MediaPlayer_CloseRequested;
+            vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
         }
         private async void MediaPlayer_PlayRequested(object sender, EventArgs e)
         {
@@ -46,6 +47,11 @@ namespace Resync_Edit.Views
             await Media.Close();
         }
 
+        private void MediaPlayer_VolumeChangeRequested(object sender, VolumeEventArgs e)
+        {
+            Media.Volume = e.Volume;
+        }
+
         private async void Media_Loaded(object sender, RoutedEventArgs e)
         {
             if (!(vm.CurrentVideo is null))
@@ -57,6 +63,12 @@ namespace Resync_Edit.Views
             {
                 MessageBox.Show("Error: No Video");
             }
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            vm.Volume = e.NewValue;
+            Media.Volume = e.NewValue;
         }
     }
 }

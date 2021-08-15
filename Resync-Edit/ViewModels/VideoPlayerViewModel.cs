@@ -21,6 +21,8 @@ namespace Resync_Edit.ViewModels
 
         private bool _pause = true;
 
+        private double _volume;
+
         private string _currentVideo;
 
         public bool Play
@@ -33,6 +35,12 @@ namespace Resync_Edit.ViewModels
         {
             get => _pause;
             set => SetProperty(ref _pause, value);
+        }
+
+        public double Volume
+        {
+            get => _volume;
+            set => SetProperty(ref _volume, value);
         }
 
         public string VideoLocation
@@ -53,11 +61,15 @@ namespace Resync_Edit.ViewModels
 
         public event EventHandler CloseRequested;
 
+        public event EventHandler<VolumeEventArgs> VolumeChangeRequested;
+
         private DelegateCommand _playRequestedCommand;
 
         private DelegateCommand _pauseRequestedCommand;
 
         private DelegateCommand _closeRequestedCommand;
+
+        private DelegateCommand<RoutedPropertyChangedEventArgs<double>> _volumeChangedCommand;
 
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
@@ -67,6 +79,9 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand CloseRequestedCommand =>
             _closeRequestedCommand ??= new DelegateCommand(CloseRequested_Execute);
+
+        public DelegateCommand<RoutedPropertyChangedEventArgs<double>> VolumeChangedCommand =>
+            _volumeChangedCommand ??= new DelegateCommand<RoutedPropertyChangedEventArgs<double>>(VolumeChanged_Execute);
 
         private void PlayRequested_Execute()
         {
@@ -90,10 +105,13 @@ namespace Resync_Edit.ViewModels
 
         private void CloseRequested_Execute()
         {
-            if (!(PauseRequested is null))
-            {
-                CloseRequested(this, EventArgs.Empty);
-            }
+            CloseRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void VolumeChanged_Execute(RoutedPropertyChangedEventArgs<double> e)
+        {
+            Volume = e.NewValue;
+            VolumeChangeRequested?.Invoke(this, new VolumeEventArgs(e.NewValue));
         }
 
         public VideoPlayerViewModel()

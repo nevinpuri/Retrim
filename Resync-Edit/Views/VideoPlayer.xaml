@@ -6,6 +6,8 @@
       xmlns:ffme="clr-namespace:Unosquare.FFME;assembly=ffme.win"
       xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
       xmlns:ui="http://schemas.modernwpf.com/2019"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:prism="http://prismlibrary.com/"
       xmlns:local="clr-namespace:Resync_Edit.Views"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
@@ -15,19 +17,30 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
-        <Grid Grid.Row="2" Background="Gray" Opacity="0.5">
+        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
+        <Grid Grid.Row="2" Background="Transparent" Opacity="0.7">
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button controls:Panel.ZIndex="99" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
-                <ui:SymbolIcon Symbol="Play"></ui:SymbolIcon>
+            <Button controls:Panel.ZIndex="99" Background="Transparent" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="28"></TextBlock>
             </Button>
-            <Button Command="{Binding PauseRequestedCommand}" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}">
-                <ui:SymbolIcon Symbol="Pause"></ui:SymbolIcon>
+            <Button Command="{Binding PauseRequestedCommand}" Background="Transparent" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}">
+                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE769;" FontSize="28" />
             </Button>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button>
-                <ui:SymbolIcon Symbol="Volume"></ui:SymbolIcon>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 10, 0">
+            <Button Background="Transparent">
+                <ui:FlyoutService.Flyout>
+                    <ui:Flyout>
+                        <Slider x:Name="Volume" Width="100" Orientation="Horizontal" Maximum="1" Minimum="0" Height="30" Value="{Binding Volume}">
+                            <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="ValueChanged">
+                                        <prism:InvokeCommandAction Command="{Binding VolumeChangedCommand}"></prism:InvokeCommandAction>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Slider>
+                    </ui:Flyout>
+                </ui:FlyoutService.Flyout>
+                <TextBlock FontFamily="Segoe MDl2 Assets" Text="&#xE767;" FontSize="28"></TextBlock>
             </Button>
         </StackPanel>
         </Grid>
