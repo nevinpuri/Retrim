@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -65,10 +66,26 @@ namespace Resync_Edit.Views
             }
         }
 
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void MinThumb_OnDragDelta(object sender, DragDeltaEventArgs e)
         {
-            vm.Volume = e.NewValue;
-            Media.Volume = e.NewValue;
+            double left = Canvas.GetLeft(MinThumb);
+            double right = Canvas.GetLeft(MaxThumb);
+            if (left + e.HorizontalChange < right && left + e.HorizontalChange > 0)
+            {
+                Canvas.SetLeft(MinThumb, left + e.HorizontalChange);
+                Slider.SelectionStart = (left + e.HorizontalChange) / 750 * 10; // divided by width times max value
+            }
+        }
+
+        private void MaxThumb_OnDragDelta(object sender, DragDeltaEventArgs e)
+        {
+            double left = Canvas.GetLeft(MinThumb);
+            double right = Canvas.GetLeft(MaxThumb);
+            if (right + e.HorizontalChange > left && right + e.HorizontalChange < 750)
+            {
+                Canvas.SetLeft(MaxThumb, right + e.HorizontalChange);
+                Slider.SelectionEnd = (right + e.HorizontalChange) / 750 * 10;
+            }
         }
     }
 }

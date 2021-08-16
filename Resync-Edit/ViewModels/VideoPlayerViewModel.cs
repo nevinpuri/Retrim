@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using ABI.Windows.Media.Core;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
