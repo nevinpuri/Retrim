@@ -17,7 +17,7 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded">
+        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime, Mode=OneWayToSource}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MediaOpened">
                     <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
@@ -26,7 +26,16 @@
         </ffme:MediaElement>
         <Grid Width="750" Grid.Row="1">
         <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7">
-            <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Maximum="10" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="10" x:Name="Slider"></Slider>
+            <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                        <prism:InvokeCommandAction Command="{Binding SliderDragStartCommand}"></prism:InvokeCommandAction>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                        <prism:InvokeCommandAction Command="{Binding SliderDragEndCommand}"></prism:InvokeCommandAction>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </Slider>
             <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MinThumb}" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MinThumb">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="DragDelta">

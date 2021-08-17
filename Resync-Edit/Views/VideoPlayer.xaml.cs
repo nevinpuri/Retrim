@@ -35,6 +35,7 @@ namespace Resync_Edit.Views
             vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
             vm.MinThumbChangeRequested += MinThumb_ChangeRequested;
             vm.MaxThumbChangeRequested += MaxThumb_ChangeRequested;
+            vm.SeekChangeRequested += MediaPlayer_SeekChangeRequested;
         }
         private async void MediaPlayer_PlayRequested(object sender, EventArgs e)
         {
@@ -60,6 +61,7 @@ namespace Resync_Edit.Views
         {
             if (!(vm.CurrentVideo is null))
             {
+                Media.ScrubbingEnabled = true;
                 await Media.Open(new Uri(vm.CurrentVideo));
                 await Media.Play();
             }
@@ -79,31 +81,10 @@ namespace Resync_Edit.Views
             Canvas.SetLeft(MaxThumb, e.Position);
         }
 
-        private void MinThumb_OnDragDelta(object sender, DragDeltaEventArgs e)
+        private void MediaPlayer_SeekChangeRequested(object sender, SliderEventArgs e)
         {
-            double left = Canvas.GetLeft(MinThumb);
-            double right = Canvas.GetLeft(MaxThumb);
-            if (left + e.HorizontalChange < right && left + e.HorizontalChange > 0)
-            {
-                Canvas.SetLeft(MinThumb, left + e.HorizontalChange);
-                Slider.SelectionStart = (left + e.HorizontalChange) / 750 * 10; // divided by width times max value
-            }
+            Media.Position = TimeSpan.FromSeconds(e.Position);
         }
 
-        private void MaxThumb_OnDragDelta(object sender, DragDeltaEventArgs e)
-        {
-            double left = Canvas.GetLeft(MinThumb);
-            double right = Canvas.GetLeft(MaxThumb);
-            if (right + e.HorizontalChange > left && right + e.HorizontalChange < 750)
-            {
-                Canvas.SetLeft(MaxThumb, right + e.HorizontalChange);
-                Slider.SelectionEnd = (right + e.HorizontalChange) / 750 * 10;
-            }
-        }
-
-        private void Media_OnMediaOpened(object? sender, MediaOpenedEventArgs e)
-        {
-            MessageBox.Show(e.Info.Duration.TotalSeconds.ToString());
-        }
     }
 }

@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Threading;
+using FFmpeg.AutoGen;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Unosquare.FFME.Common;
+using WinRT;
 
 namespace Resync_Edit.ViewModels
 {
@@ -35,6 +39,12 @@ namespace Resync_Edit.ViewModels
         private double _selectionEnd;
 
         private double _duration;
+
+        private DispatcherTimer _timer;
+
+        private TimeSpan _currentTime;
+
+        private double _seekPosition;
 
         public bool Play
         {
@@ -96,6 +106,18 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _duration, value);
         }
 
+        public TimeSpan CurrentTime
+        {
+            get => _currentTime;
+            set => SetProperty(ref _currentTime, value);
+        }
+
+        public double SeekPosition
+        {
+            get => _seekPosition;
+            set => SetProperty(ref _seekPosition, value);
+        }
+
         public event EventHandler PlayRequested;
 
         public event EventHandler PauseRequested;
@@ -107,6 +129,8 @@ namespace Resync_Edit.ViewModels
         public event EventHandler<SliderEventArgs> MinThumbChangeRequested;
 
         public event EventHandler<SliderEventArgs> MaxThumbChangeRequested;
+
+        public event EventHandler<SliderEventArgs> SeekChangeRequested;
 
         private DelegateCommand _playRequestedCommand;
 
@@ -121,6 +145,10 @@ namespace Resync_Edit.ViewModels
         private DelegateCommand<RoutedPropertyChangedEventArgs<double>> _volumeChangedCommand;
 
         private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
+
+        private DelegateCommand _sliderDragStartCommand;
+
+        private DelegateCommand _sliderDragEndCommand;
 
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
@@ -143,6 +171,12 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
             new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
 
+        public DelegateCommand SliderDragStartCommand =>
+            _sliderDragStartCommand ??= new DelegateCommand(SliderDragStart_Execute);
+
+        public DelegateCommand SliderDragEndCommand =>
+            _sliderDragEndCommand ??= new DelegateCommand(SliderDragEnd_Execute);
+
         private void PlayRequested_Execute()
         {
             if (!(PlayRequested is null))
@@ -150,6 +184,7 @@ namespace Resync_Edit.ViewModels
                 Play = false;
                 Pause = true;
                 PlayRequested(this, EventArgs.Empty);
+                _timer.Start();
             }
         }
 
@@ -178,9 +213,9 @@ namespace Resync_Edit.ViewModels
         {
             if (MinThumb + e.HorizontalChange < MaxThumb && MinThumb + e.HorizontalChange > 0)
             {
-                MinThumb = MinThumb + e.HorizontalChange;
+                MinThumb += e.HorizontalChange;
                 // MinThumbChangeRequested?.Invoke(this, new SliderEventArgs(MinThumb + e.HorizontalChange));
-                SelectionStart = (MinThumb + e.HorizontalChange) / 750 * 10;
+                SelectionStart = (MinThumb + e.HorizontalChange) / 750 * Duration;
             }
         }
 
@@ -188,9 +223,9 @@ namespace Resync_Edit.ViewModels
         {
             if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 750)
             {
-                MaxThumb = MaxThumb + e.HorizontalChange;
+                MaxThumb += e.HorizontalChange;
                 // MaxThumbChangeRequested?.Invoke(this, new SliderEventArgs(MaxThumb + e.HorizontalChange));
-                SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * 10;
+                SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * Duration;
             }
         }
 
@@ -199,9 +234,29 @@ namespace Resync_Edit.ViewModels
             Duration = e.Info.Duration.TotalSeconds;
         }
 
+        private void SliderDragStart_Execute()
+        {
+            PauseRequested?.Invoke(this, EventArgs.Empty);
+            CurrentTime = TimeSpan.FromSeconds(SeekPosition);
+        }
+
+        private void SliderDragEnd_Execute()
+        {
+            // CurrentTime = TimeSpan.FromSeconds(SeekPosition);
+            SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
+        }
+
         public VideoPlayerViewModel()
         {
             Volume = 1;
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += Timer_Tick;
+        }
+
+        public void Timer_Tick(object sender, EventArgs e)
+        {
+            SeekPosition = CurrentTime.TotalSeconds;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
