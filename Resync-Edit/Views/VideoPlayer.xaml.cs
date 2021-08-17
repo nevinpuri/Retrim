@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Resync_Edit.ViewModels;
+using Unosquare.FFME.Common;
 
 namespace Resync_Edit.Views
 {
@@ -75,6 +76,7 @@ namespace Resync_Edit.Views
 
         private void MaxThumb_ChangeRequested(object sender, SliderEventArgs e)
         {
+            Canvas.SetLeft(MaxThumb, e.Position);
         }
 
         private void MinThumb_OnDragDelta(object sender, DragDeltaEventArgs e)
@@ -97,6 +99,11 @@ namespace Resync_Edit.Views
                 Canvas.SetLeft(MaxThumb, right + e.HorizontalChange);
                 Slider.SelectionEnd = (right + e.HorizontalChange) / 750 * 10;
             }
+        }
+
+        private void Media_OnMediaOpened(object? sender, MediaOpenedEventArgs e)
+        {
+            MessageBox.Show(e.Info.Duration.TotalSeconds.ToString());
         }
     }
 }

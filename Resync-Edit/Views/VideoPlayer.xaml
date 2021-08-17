@@ -17,18 +17,24 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded"></ffme:MediaElement>
+        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MediaOpened">
+                    <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ffme:MediaElement>
         <Grid Width="750" Grid.Row="1">
         <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7">
             <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Maximum="10" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="10" x:Name="Slider"></Slider>
-            <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="0" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MinThumb" DragDelta="MinThumb_OnDragDelta">
+            <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MinThumb}" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MinThumb">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="DragDelta">
                         <prism:InvokeCommandAction Command="{Binding MinThumbChangedCommand}"></prism:InvokeCommandAction>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Thumb>
-            <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="750" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MaxThumb" DragDelta="MaxThumb_OnDragDelta">
+            <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MaxThumb}" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MaxThumb">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="DragDelta">
                         <prism:InvokeCommandAction Command="{Binding MaxThumbChangedCommand}"></prism:InvokeCommandAction>

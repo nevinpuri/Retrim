@@ -8,6 +8,7 @@ using System.Windows.Controls.Primitives;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Unosquare.FFME.Common;
 
 namespace Resync_Edit.ViewModels
 {
@@ -28,6 +29,12 @@ namespace Resync_Edit.ViewModels
         private double _minThumb = 0;
 
         private double _maxThumb = 750;
+
+        private double _selectionStart;
+
+        private double _selectionEnd;
+
+        private double _duration;
 
         public bool Play
         {
@@ -71,6 +78,24 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _maxThumb, value);
         }
 
+        public double SelectionStart
+        {
+            get => _selectionStart;
+            set => SetProperty(ref _selectionStart, value);
+        }
+
+        public double SelectionEnd
+        {
+            get => _selectionEnd;
+            set => SetProperty(ref _selectionEnd, value);
+        }
+
+        public double Duration
+        {
+            get => _duration;
+            set => SetProperty(ref _duration, value);
+        }
+
         public event EventHandler PlayRequested;
 
         public event EventHandler PauseRequested;
@@ -95,6 +120,8 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<RoutedPropertyChangedEventArgs<double>> _volumeChangedCommand;
 
+        private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -112,6 +139,9 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand<DragDeltaEventArgs> MaxThumbChangedCommand => _maxThumbChangedCommand ??=
             new DelegateCommand<DragDeltaEventArgs>(MaxThumbChanged_Execute);
+
+        public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
+            new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
 
         private void PlayRequested_Execute()
         {
@@ -148,12 +178,25 @@ namespace Resync_Edit.ViewModels
         {
             if (MinThumb + e.HorizontalChange < MaxThumb && MinThumb + e.HorizontalChange > 0)
             {
-
+                MinThumb = MinThumb + e.HorizontalChange;
+                // MinThumbChangeRequested?.Invoke(this, new SliderEventArgs(MinThumb + e.HorizontalChange));
+                SelectionStart = (MinThumb + e.HorizontalChange) / 750 * 10;
             }
         }
 
         private void MaxThumbChanged_Execute(DragDeltaEventArgs e)
         {
+            if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 750)
+            {
+                MaxThumb = MaxThumb + e.HorizontalChange;
+                // MaxThumbChangeRequested?.Invoke(this, new SliderEventArgs(MaxThumb + e.HorizontalChange));
+                SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * 10;
+            }
+        }
+
+        private void MediaOpened_Execute(MediaOpenedEventArgs e)
+        {
+            Duration = e.Info.Duration.TotalSeconds;
         }
 
         public VideoPlayerViewModel()
