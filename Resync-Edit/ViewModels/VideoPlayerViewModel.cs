@@ -150,6 +150,8 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _sliderDragEndCommand;
 
+        private DelegateCommand<PositionChangedEventArgs> _positionChangedCommand;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -177,6 +179,9 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand SliderDragEndCommand =>
             _sliderDragEndCommand ??= new DelegateCommand(SliderDragEnd_Execute);
 
+        public DelegateCommand<PositionChangedEventArgs> PositionChangedCommand => _positionChangedCommand ??=
+            new DelegateCommand<PositionChangedEventArgs>(PositionChanged_Execute);
+
         private void PlayRequested_Execute()
         {
             if (!(PlayRequested is null))
@@ -184,7 +189,6 @@ namespace Resync_Edit.ViewModels
                 Play = false;
                 Pause = true;
                 PlayRequested(this, EventArgs.Empty);
-                _timer.Start();
             }
         }
 
@@ -237,7 +241,6 @@ namespace Resync_Edit.ViewModels
         private void SliderDragStart_Execute()
         {
             PauseRequested?.Invoke(this, EventArgs.Empty);
-            CurrentTime = TimeSpan.FromSeconds(SeekPosition);
         }
 
         private void SliderDragEnd_Execute()
@@ -246,17 +249,14 @@ namespace Resync_Edit.ViewModels
             SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
         }
 
+        public void PositionChanged_Execute(PositionChangedEventArgs e)
+        {
+            SeekPosition = e.Position.TotalSeconds;
+        }
+
         public VideoPlayerViewModel()
         {
             Volume = 1;
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += Timer_Tick;
-        }
-
-        public void Timer_Tick(object sender, EventArgs e)
-        {
-            SeekPosition = CurrentTime.TotalSeconds;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

@@ -81,10 +81,14 @@ namespace Resync_Edit.Views
             Canvas.SetLeft(MaxThumb, e.Position);
         }
 
-        private void MediaPlayer_SeekChangeRequested(object sender, SliderEventArgs e)
+        private async void MediaPlayer_SeekChangeRequested(object sender, SliderEventArgs e)
         {
-            Media.Position = TimeSpan.FromSeconds(e.Position);
+            await Media.Seek(TimeSpan.FromSeconds(e.Position));
+            await Media.Play();
         }
 
+        private void Media_OnPositionChanged(object? sender, PositionChangedEventArgs e)
+        {
+        }
     }
 }

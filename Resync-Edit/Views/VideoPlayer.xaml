@@ -17,10 +17,13 @@
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime, Mode=OneWayToSource}">
+        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MediaOpened">
                     <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="PositionChanged">
+                    <prism:InvokeCommandAction Command="{Binding PositionChangedCommand}"></prism:InvokeCommandAction>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ffme:MediaElement>
