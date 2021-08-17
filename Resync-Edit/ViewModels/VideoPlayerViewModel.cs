@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -23,6 +24,10 @@ namespace Resync_Edit.ViewModels
         private double _volume;
 
         private string _currentVideo;
+
+        private double _minThumb = 0;
+
+        private double _maxThumb = 750;
 
         public bool Play
         {
@@ -54,6 +59,18 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _currentVideo, value);
         }
 
+        public double MinThumb
+        {
+            get => _minThumb;
+            set => SetProperty(ref _minThumb, value);
+        }
+
+        public double MaxThumb
+        {
+            get => _maxThumb;
+            set => SetProperty(ref _maxThumb, value);
+        }
+
         public event EventHandler PlayRequested;
 
         public event EventHandler PauseRequested;
@@ -62,11 +79,19 @@ namespace Resync_Edit.ViewModels
 
         public event EventHandler<VolumeEventArgs> VolumeChangeRequested;
 
+        public event EventHandler<SliderEventArgs> MinThumbChangeRequested;
+
+        public event EventHandler<SliderEventArgs> MaxThumbChangeRequested;
+
         private DelegateCommand _playRequestedCommand;
 
         private DelegateCommand _pauseRequestedCommand;
 
         private DelegateCommand _closeRequestedCommand;
+
+        private DelegateCommand<DragDeltaEventArgs> _minThumbChangedCommand;
+
+        private DelegateCommand<DragDeltaEventArgs> _maxThumbChangedCommand;
 
         private DelegateCommand<RoutedPropertyChangedEventArgs<double>> _volumeChangedCommand;
 
@@ -81,6 +106,12 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand<RoutedPropertyChangedEventArgs<double>> VolumeChangedCommand =>
             _volumeChangedCommand ??= new DelegateCommand<RoutedPropertyChangedEventArgs<double>>(VolumeChanged_Execute);
+
+        public DelegateCommand<DragDeltaEventArgs> MinThumbChangedCommand => _minThumbChangedCommand ??=
+            new DelegateCommand<DragDeltaEventArgs>(MinThumbChanged_Execute);
+
+        public DelegateCommand<DragDeltaEventArgs> MaxThumbChangedCommand => _maxThumbChangedCommand ??=
+            new DelegateCommand<DragDeltaEventArgs>(MaxThumbChanged_Execute);
 
         private void PlayRequested_Execute()
         {
@@ -111,6 +142,18 @@ namespace Resync_Edit.ViewModels
         {
             Volume = e.NewValue;
             VolumeChangeRequested?.Invoke(this, new VolumeEventArgs(e.NewValue));
+        }
+
+        private void MinThumbChanged_Execute(DragDeltaEventArgs e)
+        {
+            if (MinThumb + e.HorizontalChange < MaxThumb && MinThumb + e.HorizontalChange > 0)
+            {
+
+            }
+        }
+
+        private void MaxThumbChanged_Execute(DragDeltaEventArgs e)
+        {
         }
 
         public VideoPlayerViewModel()

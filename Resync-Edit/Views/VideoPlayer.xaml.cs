@@ -32,6 +32,8 @@ namespace Resync_Edit.Views
             vm.PauseRequested += MediaPlayer_PauseRequested;
             vm.CloseRequested += MediaPlayer_CloseRequested;
             vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
+            vm.MinThumbChangeRequested += MinThumb_ChangeRequested;
+            vm.MaxThumbChangeRequested += MaxThumb_ChangeRequested;
         }
         private async void MediaPlayer_PlayRequested(object sender, EventArgs e)
         {
@@ -64,6 +66,15 @@ namespace Resync_Edit.Views
             {
                 MessageBox.Show("Error: No Video");
             }
+        }
+
+        private void MinThumb_ChangeRequested(object sender, SliderEventArgs e)
+        {
+            Canvas.SetLeft(MinThumb, e.Position);
+        }
+
+        private void MaxThumb_ChangeRequested(object sender, SliderEventArgs e)
+        {
         }
 
         private void MinThumb_OnDragDelta(object sender, DragDeltaEventArgs e)
