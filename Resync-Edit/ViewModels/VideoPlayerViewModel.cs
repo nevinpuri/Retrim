@@ -147,6 +147,8 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<PositionChangedEventArgs> _positionChangedCommand;
 
+        private DelegateCommand _playPauseToggleCommand;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -176,6 +178,9 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand<PositionChangedEventArgs> PositionChangedCommand => _positionChangedCommand ??=
             new DelegateCommand<PositionChangedEventArgs>(PositionChanged_Execute);
+
+        public DelegateCommand PlayPauseToggleCommand =>
+            _playPauseToggleCommand ??= new DelegateCommand(PlayPauseToggle_Execute);
 
         private void PlayRequested_Execute()
         {
@@ -260,6 +265,12 @@ namespace Resync_Edit.ViewModels
         public void PositionChanged_Execute(PositionChangedEventArgs e)
         {
             SeekPosition = e.Position.TotalSeconds;
+        }
+
+        private void PlayPauseToggle_Execute()
+        {
+            if (Play) PlayRequested_Execute();
+            else PauseRequested_Execute();
         }
 
         public VideoPlayerViewModel()

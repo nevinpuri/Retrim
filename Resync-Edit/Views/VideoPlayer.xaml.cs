@@ -70,5 +70,10 @@ namespace Resync_Edit.Views
             if (e.isPlaying)
                 await Media.Play();
         }
+
+        private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Focus();
+        }
     }
 }
