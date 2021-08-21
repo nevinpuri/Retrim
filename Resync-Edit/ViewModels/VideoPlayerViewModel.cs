@@ -139,6 +139,8 @@ namespace Resync_Edit.ViewModels
 
         public event EventHandler<SliderEventArgs> SeekChangeRequested;
 
+        public event EventHandler<SeekEventArgs> MainSeekRequested;
+
         private DelegateCommand _playRequestedCommand;
 
         private DelegateCommand _pauseRequestedCommand;
@@ -262,10 +264,11 @@ namespace Resync_Edit.ViewModels
             PauseRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SliderDragEnd_Execute()
+        private async void SliderDragEnd_Execute()
         {
             // CurrentTime = TimeSpan.FromSeconds(SeekPosition);
-            SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
+            CurrentTime = TimeSpan.FromSeconds(SeekPosition);
+            MainSeekRequested?.Invoke(this, new SeekEventArgs(SeekPosition, Pause));
         }
 
         public void PositionChanged_Execute(PositionChangedEventArgs e)

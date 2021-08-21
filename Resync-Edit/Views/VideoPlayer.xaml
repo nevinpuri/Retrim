@@ -29,8 +29,8 @@
         </ffme:MediaElement>
         <Grid Width="750" Grid.Row="1">
         <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7">
-            <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider">
-                <i:Interaction.Triggers>
+                <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider">
+                    <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                         <prism:InvokeCommandAction Command="{Binding SliderDragStartCommand}"></prism:InvokeCommandAction>
                     </i:EventTrigger>

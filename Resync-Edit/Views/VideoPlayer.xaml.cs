@@ -34,6 +34,7 @@ namespace Resync_Edit.Views
             vm.CloseRequested += MediaPlayer_CloseRequested;
             vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
             vm.SeekChangeRequested += MediaPlayer_SeekChangeRequested;
+            vm.MainSeekRequested += MediaPlayer_MainSeekChangeRequested;
         }
 
         private async void MediaPlayer_PlayRequested(object sender, EventArgs e) => await Media.Play();
@@ -61,7 +62,13 @@ namespace Resync_Edit.Views
         private async void MediaPlayer_SeekChangeRequested(object sender, SliderEventArgs e)
         {
             await Media.Seek(TimeSpan.FromSeconds(e.Position));
-            //await Media.Play();
+        }
+
+        private async void MediaPlayer_MainSeekChangeRequested(object sender, SeekEventArgs e) // really bad code, not going to do things like this for the rewrite
+        {
+            await Media.Seek(TimeSpan.FromSeconds(e.Position));
+            if (e.isPlaying)
+                await Media.Play();
         }
     }
 }
