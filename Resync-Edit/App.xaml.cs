@@ -20,7 +20,7 @@ namespace Resync_Edit
         public App()
         {
             Unosquare.FFME.Library.FFmpegDirectory =
-                @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows\ffmpeg\bin";
+                @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin";
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

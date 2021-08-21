@@ -109,13 +109,20 @@ namespace Resync_Edit.ViewModels
         public TimeSpan CurrentTime
         {
             get => _currentTime;
-            set => SetProperty(ref _currentTime, value);
+            set
+            {
+                SetProperty(ref _currentTime, value);
+            }
         }
+
 
         public double SeekPosition
         {
             get => _seekPosition;
-            set => SetProperty(ref _seekPosition, value);
+            set
+            {
+                SetProperty(ref _seekPosition, value);
+            }
         }
 
         public event EventHandler PlayRequested;
@@ -219,6 +226,12 @@ namespace Resync_Edit.ViewModels
             {
                 MinThumb += e.HorizontalChange;
                 // MinThumbChangeRequested?.Invoke(this, new SliderEventArgs(MinThumb + e.HorizontalChange));
+                if (Math.Round(SeekPosition, 1) != Math.Round(SelectionStart, 1))
+                {
+                    CurrentTime = TimeSpan.FromSeconds(SelectionStart);
+                    SeekPosition = SelectionStart;
+                    SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
+                }
                 SelectionStart = (MinThumb + e.HorizontalChange) / 750 * Duration;
             }
         }
@@ -228,6 +241,12 @@ namespace Resync_Edit.ViewModels
             if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 750)
             {
                 MaxThumb += e.HorizontalChange;
+                if (Math.Round(SeekPosition, 1) != Math.Round(SelectionEnd, 1))
+                {
+                    CurrentTime = TimeSpan.FromSeconds(SelectionEnd);
+                    SeekPosition = SelectionEnd;
+                    SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
+                }
                 // MaxThumbChangeRequested?.Invoke(this, new SliderEventArgs(MaxThumb + e.HorizontalChange));
                 SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * Duration;
             }

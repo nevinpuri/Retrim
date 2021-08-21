@@ -26,7 +26,9 @@ namespace Resync_Edit.ViewModels
 
         private void FileSelect_Execute()
         {
-            _regionManager.RequestNavigate("ContentRegion", "VideoPlayer");
+            var navigationParameters = new NavigationParameters();
+            navigationParameters.Add("UserVideos", @"C:\Users\Nevin\Desktop\20210803_230743.mp4");
+            _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
         }
 
     }

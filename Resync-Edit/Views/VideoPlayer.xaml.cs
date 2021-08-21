@@ -33,29 +33,16 @@ namespace Resync_Edit.Views
             vm.PauseRequested += MediaPlayer_PauseRequested;
             vm.CloseRequested += MediaPlayer_CloseRequested;
             vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
-            vm.MinThumbChangeRequested += MinThumb_ChangeRequested;
-            vm.MaxThumbChangeRequested += MaxThumb_ChangeRequested;
             vm.SeekChangeRequested += MediaPlayer_SeekChangeRequested;
         }
-        private async void MediaPlayer_PlayRequested(object sender, EventArgs e)
-        {
-            await Media.Play();
-        }
 
-        private async void MediaPlayer_PauseRequested(object sender, EventArgs e)
-        {
-            await Media.Pause();
-        }
+        private async void MediaPlayer_PlayRequested(object sender, EventArgs e) => await Media.Play();
 
-        private async void MediaPlayer_CloseRequested(object sender, EventArgs e)
-        {
-            await Media.Close();
-        }
+        private async void MediaPlayer_PauseRequested(object sender, EventArgs e) => await Media.Pause();
 
-        private void MediaPlayer_VolumeChangeRequested(object sender, VolumeEventArgs e)
-        {
-            Media.Volume = e.Volume;
-        }
+        private async void MediaPlayer_CloseRequested(object sender, EventArgs e) => await Media.Close();
+
+        private void MediaPlayer_VolumeChangeRequested(object sender, VolumeEventArgs e) => Media.Volume = e.Volume;
 
         private async void Media_Loaded(object sender, RoutedEventArgs e)
         {
@@ -71,24 +58,10 @@ namespace Resync_Edit.Views
             }
         }
 
-        private void MinThumb_ChangeRequested(object sender, SliderEventArgs e)
-        {
-            Canvas.SetLeft(MinThumb, e.Position);
-        }
-
-        private void MaxThumb_ChangeRequested(object sender, SliderEventArgs e)
-        {
-            Canvas.SetLeft(MaxThumb, e.Position);
-        }
-
         private async void MediaPlayer_SeekChangeRequested(object sender, SliderEventArgs e)
         {
             await Media.Seek(TimeSpan.FromSeconds(e.Position));
-            await Media.Play();
-        }
-
-        private void Media_OnPositionChanged(object? sender, PositionChangedEventArgs e)
-        {
+            //await Media.Play();
         }
     }
 }
