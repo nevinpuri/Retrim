@@ -14,10 +14,9 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement Grid.RowSpan="3" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime}">
+        <ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MediaOpened">
                     <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
@@ -27,8 +26,9 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ffme:MediaElement>
-        <Grid Width="750" Grid.Row="1">
-        <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7">
+        <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+        <Grid Width="750" VerticalAlignment="Bottom">
+        <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7" Height="40">
                 <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider">
                     <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
@@ -55,8 +55,8 @@
             </Thumb>
         </Canvas>
         </Grid>
-        <Grid Grid.Row="2" Background="Transparent" Opacity="0.7">
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+        <Grid Margin="0, 5">
+        <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Center">
             <Button controls:Panel.ZIndex="99" Background="Transparent" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
                 <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="28"></TextBlock>
             </Button>
@@ -81,5 +81,6 @@
             </Button>
         </StackPanel>
         </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

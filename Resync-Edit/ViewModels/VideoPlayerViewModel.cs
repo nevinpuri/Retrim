@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using System.Windows.Threading;
-using FFmpeg.AutoGen;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using Unosquare.FFME.Common;
-using WinRT;
 
 namespace Resync_Edit.ViewModels
 {
@@ -22,7 +14,7 @@ namespace Resync_Edit.ViewModels
 
         private string _videoLocation;
 
-        private bool _play = false;
+        private bool _play;
 
         private bool _pause = true;
 
@@ -30,7 +22,7 @@ namespace Resync_Edit.ViewModels
 
         private string _currentVideo;
 
-        private double _minThumb = 0;
+        private double _minThumb;
 
         private double _maxThumb = 750;
 
@@ -39,8 +31,6 @@ namespace Resync_Edit.ViewModels
         private double _selectionEnd;
 
         private double _duration;
-
-        private DispatcherTimer _timer;
 
         private TimeSpan _currentTime;
 
@@ -132,10 +122,6 @@ namespace Resync_Edit.ViewModels
         public event EventHandler CloseRequested;
 
         public event EventHandler<VolumeEventArgs> VolumeChangeRequested;
-
-        public event EventHandler<SliderEventArgs> MinThumbChangeRequested;
-
-        public event EventHandler<SliderEventArgs> MaxThumbChangeRequested;
 
         public event EventHandler<SliderEventArgs> SeekChangeRequested;
 
@@ -264,7 +250,7 @@ namespace Resync_Edit.ViewModels
             PauseRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private async void SliderDragEnd_Execute()
+        private void SliderDragEnd_Execute()
         {
             // CurrentTime = TimeSpan.FromSeconds(SeekPosition);
             CurrentTime = TimeSpan.FromSeconds(SeekPosition);
