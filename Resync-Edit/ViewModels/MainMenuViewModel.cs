@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace Resync_Edit.ViewModels
 {
@@ -26,9 +32,23 @@ namespace Resync_Edit.ViewModels
 
         private void FileSelect_Execute()
         {
-            var navigationParameters = new NavigationParameters();
-            navigationParameters.Add("UserVideos", @"C:\Users\Nevin\Desktop\20210803_230743.mp4");
-            _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
+            string filePath;
+            using (OpenFileDialog fileDialog = new OpenFileDialog())
+            {
+                fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
+                fileDialog.RestoreDirectory = true;
+                if (fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    filePath = fileDialog.FileName;
+                    var navigationParameters = new NavigationParameters();
+                    navigationParameters.Add("UserVideos", filePath);
+                    _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
+                }
+                else
+                {
+                    MessageBox.Show("Error: No File");
+                }
+            }
         }
 
     }
