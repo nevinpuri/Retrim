@@ -4,6 +4,7 @@ using System.Windows.Controls.Primitives;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using Unosquare.FFME;
 using Unosquare.FFME.Common;
 
 namespace Resync_Edit.ViewModels
@@ -149,6 +150,10 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _playPauseToggleCommand;
 
+        private DelegateCommand _muteCommand;
+
+        private DelegateCommand _previousNavigate;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -181,6 +186,9 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand PlayPauseToggleCommand =>
             _playPauseToggleCommand ??= new DelegateCommand(PlayPauseToggle_Execute);
+        public DelegateCommand MuteCommand => _muteCommand ??= new DelegateCommand(MuteCommand_Execute);
+
+        public DelegateCommand PreviousNavigate => _previousNavigate ??= new DelegateCommand(PreviousNavigate_Execute);
 
         private void PlayRequested_Execute()
         {
@@ -271,6 +279,16 @@ namespace Resync_Edit.ViewModels
         {
             if (Play) PlayRequested_Execute();
             else PauseRequested_Execute();
+        }
+
+        private void MuteCommand_Execute()
+        {
+            if (Volume > 0) Volume = 0;
+            else Volume = 1;
+        }
+
+        private void PreviousNavigate_Execute()
+        {
         }
 
         public VideoPlayerViewModel()

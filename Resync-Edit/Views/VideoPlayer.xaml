@@ -13,13 +13,14 @@
       d:DesignHeight="450" d:DesignWidth="800" Focusable="True" Loaded="VideoPlayer_OnLoaded">
     <UserControl.InputBindings>
         <KeyBinding Command="{Binding PlayPauseToggleCommand}" Key="Space"></KeyBinding>
+        <KeyBinding Command="{Binding MuteCommand}" Key="M" Modifiers="Control"></KeyBinding>
     </UserControl.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="8*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime}" LoopingBehavior="Play">
+        <ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime}" LoopingBehavior="Play" Focusable="False">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MediaOpened">
                     <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
@@ -29,8 +30,8 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ffme:MediaElement>
-        <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
-        <Grid Width="750" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Focusable="False">
+        <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
         <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7" Height="40">
                 <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider" Focusable="False">
                     <i:Interaction.Triggers>
@@ -86,6 +87,9 @@
         </Grid>
         </StackPanel>
         <ui:CommandBar Grid.Row="0" Background="Transparent">
+            <ui:CommandBar.Content>
+                <ui:AppBarButton Icon="Back" Command="{Binding PreviousNavigate}"></ui:AppBarButton>
+            </ui:CommandBar.Content>
             <ui:AppBarButton Icon="Copy" Label="Save a Copy"></ui:AppBarButton>
             <ui:AppBarButton Icon="Save" Label="Save"></ui:AppBarButton>
             <ui:CommandBar.SecondaryCommands>
