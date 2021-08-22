@@ -24,19 +24,22 @@ namespace Resync_Edit.Views
     /// </summary>
     public partial class VideoPlayer : UserControl
     {
-        VideoPlayerViewModel vm = new VideoPlayerViewModel();
+        // VideoPlayerViewModel vm = new VideoPlayerViewModel();
         public VideoPlayer()
         {
             InitializeComponent();
-            this.DataContext = vm;
+            // this.DataContext = vm;
+            /*
             vm.PlayRequested += MediaPlayer_PlayRequested;
             vm.PauseRequested += MediaPlayer_PauseRequested;
             vm.CloseRequested += MediaPlayer_CloseRequested;
             vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
             vm.SeekChangeRequested += MediaPlayer_SeekChangeRequested;
             vm.MainSeekRequested += MediaPlayer_MainSeekChangeRequested;
+            */
         }
 
+        /*
         private async void MediaPlayer_PlayRequested(object sender, EventArgs e) => await Media.Play();
 
         private async void MediaPlayer_PauseRequested(object sender, EventArgs e) => await Media.Pause();
@@ -70,6 +73,7 @@ namespace Resync_Edit.Views
             if (e.isPlaying)
                 await Media.Play();
         }
+        */
 
         private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
         {

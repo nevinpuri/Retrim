@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -21,7 +23,11 @@ namespace Resync_Edit.ViewModels
 
         private double _volume;
 
+        private IRegionManager _regionManager;
+
         private string _currentVideo;
+
+        private MediaElement _mediaElement = new MediaElement();
 
         private double _minThumb;
 
@@ -65,6 +71,12 @@ namespace Resync_Edit.ViewModels
         {
             get => _currentVideo;
             set => SetProperty(ref _currentVideo, value);
+        }
+
+        public MediaElement MediaElement
+        {
+            get => _mediaElement;
+            set => SetProperty(ref _mediaElement, value);
         }
 
         public double MinThumb
@@ -140,13 +152,21 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<RoutedPropertyChangedEventArgs<double>> _volumeChangedCommand;
 
+        /*
+        private DelegateCommand _mediaLoadCommand;
+        */
+
+        /*
         private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
+        */
 
         private DelegateCommand _sliderDragStartCommand;
 
         private DelegateCommand _sliderDragEndCommand;
 
+        /*
         private DelegateCommand<PositionChangedEventArgs> _positionChangedCommand;
+        */
 
         private DelegateCommand _playPauseToggleCommand;
 
@@ -166,14 +186,20 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand<RoutedPropertyChangedEventArgs<double>> VolumeChangedCommand =>
             _volumeChangedCommand ??= new DelegateCommand<RoutedPropertyChangedEventArgs<double>>(VolumeChanged_Execute);
 
+        /*
+        public DelegateCommand MediaLoadCommand => _mediaLoadCommand ??= new DelegateCommand(MediaLoad_Execute);
+        */
+
         public DelegateCommand<DragDeltaEventArgs> MinThumbChangedCommand => _minThumbChangedCommand ??=
             new DelegateCommand<DragDeltaEventArgs>(MinThumbChanged_Execute);
 
         public DelegateCommand<DragDeltaEventArgs> MaxThumbChangedCommand => _maxThumbChangedCommand ??=
             new DelegateCommand<DragDeltaEventArgs>(MaxThumbChanged_Execute);
 
+        /*
         public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
             new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
+        */
 
         public DelegateCommand SliderDragStartCommand =>
             _sliderDragStartCommand ??= new DelegateCommand(SliderDragStart_Execute);
@@ -181,8 +207,10 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand SliderDragEndCommand =>
             _sliderDragEndCommand ??= new DelegateCommand(SliderDragEnd_Execute);
 
+        /*
         public DelegateCommand<PositionChangedEventArgs> PositionChangedCommand => _positionChangedCommand ??=
             new DelegateCommand<PositionChangedEventArgs>(PositionChanged_Execute);
+        */
 
         public DelegateCommand PlayPauseToggleCommand =>
             _playPauseToggleCommand ??= new DelegateCommand(PlayPauseToggle_Execute);
@@ -190,38 +218,50 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand PreviousNavigate => _previousNavigate ??= new DelegateCommand(PreviousNavigate_Execute);
 
-        private void PlayRequested_Execute()
+        private async void PlayRequested_Execute()
         {
-            if (!(PlayRequested is null))
-            {
-                Play = false;
-                Pause = true;
-                PlayRequested(this, EventArgs.Empty);
-            }
+            Play = false;
+            Pause = true;
+            await MediaElement.Play();
+            // PlayRequested(this, EventArgs.Empty);
         }
 
-        private void PauseRequested_Execute()
+        private async void PauseRequested_Execute()
         {
-            if (!(PauseRequested is null))
-            {
-                Play = true;
-                Pause = false;
-                PauseRequested(this, EventArgs.Empty);
-            }
+            Play = true;
+            Pause = false;
+            await MediaElement.Pause();
+            // PauseRequested(this, EventArgs.Empty);
         }
 
-        private void CloseRequested_Execute()
+        private async void CloseRequested_Execute()
         {
-            CloseRequested?.Invoke(this, EventArgs.Empty);
+            await MediaElement.Close();
+            // CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void VolumeChanged_Execute(RoutedPropertyChangedEventArgs<double> e)
         {
             Volume = e.NewValue;
-            VolumeChangeRequested?.Invoke(this, new VolumeEventArgs(e.NewValue));
+            MediaElement.Volume = e.NewValue;
+            // VolumeChangeRequested?.Invoke(this, new VolumeEventArgs(e.NewValue));
         }
 
-        private void MinThumbChanged_Execute(DragDeltaEventArgs e)
+        private async void MediaLoad_Execute(object sender, RoutedEventArgs e)
+        {
+            MediaElement.LoadedBehavior = MediaPlaybackState.Manual;
+            MediaElement.UnloadedBehavior = MediaPlaybackState.Manual;
+            MediaElement.LoopingBehavior = MediaPlaybackState.Play;
+            MediaElement.ScrubbingEnabled = true;
+            MediaElement.MediaOpened -= MediaOpened_Execute;
+            MediaElement.PositionChanged -= PositionChanged_Execute;
+            MediaElement.MediaOpened += MediaOpened_Execute;
+            MediaElement.PositionChanged += PositionChanged_Execute;
+            await MediaElement.Open(new Uri(CurrentVideo));
+            await MediaElement.Play();
+        }
+
+        private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
         {
             if (MinThumb + e.HorizontalChange < MaxThumb && MinThumb + e.HorizontalChange > 0)
             {
@@ -231,46 +271,51 @@ namespace Resync_Edit.ViewModels
                 {
                     CurrentTime = TimeSpan.FromSeconds(SelectionStart);
                     SeekPosition = SelectionStart;
-                    SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
+                    await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
+                    // SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
                 }
                 SelectionStart = (MinThumb + e.HorizontalChange) / 750 * Duration;
             }
         }
 
-        private void MaxThumbChanged_Execute(DragDeltaEventArgs e)
+        private async void MaxThumbChanged_Execute(DragDeltaEventArgs e)
         {
-            if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 750)
+            if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 747)
             {
                 MaxThumb += e.HorizontalChange;
                 if (Math.Round(SeekPosition, 1) != Math.Round(SelectionEnd, 1))
                 {
                     CurrentTime = TimeSpan.FromSeconds(SelectionEnd);
                     SeekPosition = SelectionEnd;
-                    SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
+                    await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
+                    // SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
                 }
                 // MaxThumbChangeRequested?.Invoke(this, new SliderEventArgs(MaxThumb + e.HorizontalChange));
                 SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * Duration;
             }
         }
 
-        private void MediaOpened_Execute(MediaOpenedEventArgs e)
+        private void MediaOpened_Execute(object sender, MediaOpenedEventArgs e)
         {
             Duration = e.Info.Duration.TotalSeconds;
         }
 
-        private void SliderDragStart_Execute()
+        private async void SliderDragStart_Execute()
         {
-            PauseRequested?.Invoke(this, EventArgs.Empty);
+            await MediaElement.Pause();
+            // PauseRequested?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SliderDragEnd_Execute()
+        private async void SliderDragEnd_Execute()
         {
             // CurrentTime = TimeSpan.FromSeconds(SeekPosition);
             CurrentTime = TimeSpan.FromSeconds(SeekPosition);
-            MainSeekRequested?.Invoke(this, new SeekEventArgs(SeekPosition, Pause));
+            await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
+            if (Pause) await MediaElement.Play();
+            // MainSeekRequested?.Invoke(this, new SeekEventArgs(SeekPosition, Pause));
         }
 
-        public void PositionChanged_Execute(PositionChangedEventArgs e)
+        public void PositionChanged_Execute(object sender, PositionChangedEventArgs e)
         {
             SeekPosition = e.Position.TotalSeconds;
         }
@@ -287,13 +332,17 @@ namespace Resync_Edit.ViewModels
             else Volume = 1;
         }
 
-        private void PreviousNavigate_Execute()
+        private async void PreviousNavigate_Execute()
         {
+            await MediaElement.Pause();
+            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
         }
 
-        public VideoPlayerViewModel()
+        public VideoPlayerViewModel(IRegionManager regionManager)
         {
             Volume = 1;
+            _regionManager = regionManager;
+            MediaElement.Loaded += MediaLoad_Execute;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
