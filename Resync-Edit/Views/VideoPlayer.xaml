@@ -34,7 +34,7 @@
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Focusable="False">
         <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
         <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7" Height="40">
-                <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider" Focusable="False">
+                <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding SeekPosition}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider" Focusable="False" IsMoveToPointEnabled="True">
                     <i:Interaction.Triggers>
                     <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                         <prism:InvokeCommandAction Command="{Binding SliderDragStartCommand}"></prism:InvokeCommandAction>

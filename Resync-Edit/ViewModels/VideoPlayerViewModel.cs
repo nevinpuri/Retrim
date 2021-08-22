@@ -303,6 +303,8 @@ namespace Resync_Edit.ViewModels
         private async void SliderDragStart_Execute()
         {
             await MediaElement.Pause();
+            CurrentTime = TimeSpan.FromSeconds(SeekPosition);
+            await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
             // PauseRequested?.Invoke(this, EventArgs.Empty);
         }
 
