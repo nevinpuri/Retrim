@@ -33,8 +33,6 @@ namespace Resync_Edit.ViewModels
 
         private string _currentVideo;
 
-        private string _currentPath;
-
         private MediaElement _mediaElement;
 
         private double _minThumb;
@@ -79,12 +77,6 @@ namespace Resync_Edit.ViewModels
         {
             get => _currentVideo;
             set => SetProperty(ref _currentVideo, value);
-        }
-
-        public string CurrentPath
-        {
-            get => _currentPath;
-            set => SetProperty(ref _currentPath, value);
         }
 
         public MediaElement MediaElement
@@ -275,8 +267,6 @@ namespace Resync_Edit.ViewModels
             MediaElement.UnloadedBehavior = MediaPlaybackState.Manual;
             MediaElement.LoopingBehavior = MediaPlaybackState.Play;
             MediaElement.ScrubbingEnabled = true;
-            MediaElement.MediaOpened -= MediaOpened_Execute;
-            MediaElement.PositionChanged -= PositionChanged_Execute;
             MediaElement.MediaOpened += MediaOpened_Execute;
             MediaElement.PositionChanged += PositionChanged_Execute;
         }
