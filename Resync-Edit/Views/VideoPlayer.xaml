@@ -20,16 +20,6 @@
             <RowDefinition Height="8*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
-        <!-- ffme:MediaElement Grid.RowSpan="2" x:Name="Media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Background="Black" Loaded="Media_Loaded" Position="{Binding CurrentTime}" LoopingBehavior="Play" Focusable="False">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MediaOpened">
-                    <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
-                </i:EventTrigger>
-                <i:EventTrigger EventName="PositionChanged">
-                    <prism:InvokeCommandAction Command="{Binding PositionChangedCommand}"></prism:InvokeCommandAction>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </-->
         <ContentControl Grid.RowSpan="2" Content="{Binding MediaElement}"></ContentControl>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Focusable="False">
         <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
