@@ -83,8 +83,8 @@
             </ui:CommandBar.Content>
             <ui:AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCopyCommand}"></ui:AppBarButton>
             <ui:CommandBar.SecondaryCommands>
-                <ui:AppBarButton Icon="Setting" Label="Settings"></ui:AppBarButton>
-                <ui:AppBarButton Label="About">
+                <ui:AppBarButton Command="{Binding SettingsCommand}" Icon="Setting" Label="Settings"></ui:AppBarButton>
+                <ui:AppBarButton Command="{Binding AboutCommand}" Label="About">
                     <ui:AppBarButton.Icon>
                         <ui:SymbolIcon Symbol="ContactInfo"></ui:SymbolIcon>
                     </ui:AppBarButton.Icon>

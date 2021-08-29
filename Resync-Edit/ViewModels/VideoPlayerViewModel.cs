@@ -189,6 +189,8 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _saveCommand;
 
+        private DelegateCommand _settingsCommand;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -236,6 +238,8 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
 
         public DelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(SaveVideo_Execute);
+
+        public DelegateCommand SettingsCommand => _settingsCommand ??= new DelegateCommand(SettingsShow_Execute);
 
         private async void PlayRequested_Execute()
         {
@@ -375,12 +379,16 @@ namespace Resync_Edit.ViewModels
                         .WithFastStart())
                     .ProcessAsynchronously();
                 Exporting = false;
-                new ToastContentBuilder().AddText("Your video has finished converting!").Show();
+                new ToastContentBuilder().AddText("Your video has finished exporting!").Show();
                 MessageBox.Show("done");
             }
         }
 
         private void SaveVideo_Execute()
+        {
+        }
+
+        private void SettingsShow_Execute()
         {
         }
 
@@ -396,6 +404,8 @@ namespace Resync_Edit.ViewModels
         {
             VideoLocation = (string)navigationContext.Parameters["UserVideos"];
             CurrentVideo = VideoLocation;
+            MinThumb = 0;
+            MaxThumb = 750;
             if (!MediaElement.IsLoaded)
             {
                 await MediaElement.Close();
