@@ -10,6 +10,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using FFMpegCore;
 using FFMpegCore.Enums;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -50,6 +51,8 @@ namespace Resync_Edit.ViewModels
         private TimeSpan _currentTime;
 
         private double _seekPosition;
+
+        private bool _exporting;
 
         public bool Play
         {
@@ -120,20 +123,20 @@ namespace Resync_Edit.ViewModels
         public TimeSpan CurrentTime
         {
             get => _currentTime;
-            set
-            {
-                SetProperty(ref _currentTime, value);
-            }
+            set => SetProperty(ref _currentTime, value);
         }
 
 
         public double SeekPosition
         {
             get => _seekPosition;
-            set
-            {
-                SetProperty(ref _seekPosition, value);
-            }
+            set => SetProperty(ref _seekPosition, value);
+        }
+
+        public bool Exporting
+        {
+            get => _exporting;
+            set => SetProperty(ref _exporting, value);
         }
 
         public event EventHandler PlayRequested;
@@ -362,6 +365,7 @@ namespace Resync_Edit.ViewModels
 
             if (fileSave.FileName != "")
             {
+                Exporting = true;
                 await FFMpegArguments.FromFileInput(CurrentVideo, true, options => options
                         .UsingMultithreading(true)
                         .Seek(TimeSpan.FromSeconds(SelectionStart))
@@ -370,6 +374,8 @@ namespace Resync_Edit.ViewModels
                         .WithCustomArgument("-c copy")
                         .WithFastStart())
                     .ProcessAsynchronously();
+                Exporting = false;
+                new ToastContentBuilder().AddText("Your video has finished converting!").Show();
                 MessageBox.Show("done");
             }
         }
