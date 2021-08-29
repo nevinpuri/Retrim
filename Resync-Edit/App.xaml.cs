@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using FFMpegCore;
 using Prism.Ioc;
 using Prism.Unity;
 using Resync_Edit.Views;
@@ -19,8 +21,16 @@ namespace Resync_Edit
     {
         public App()
         {
+            if (!Directory.Exists(Path.Join(Path.GetTempPath(), "Resync-Temp")))
+                Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "Resync-Temp"));
             Unosquare.FFME.Library.FFmpegDirectory =
                 @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin";
+            GlobalFFOptions.Configure(new FFOptions
+            {
+                BinaryFolder =
+                    @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin",
+                TemporaryFilesFolder = Path.Join(Path.GetTempPath(), "Resync-Temp")
+            });
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)

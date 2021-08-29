@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="FFME.Windows" Version="4.4.350" />
+    <PackageReference Include="FFMpegCore" Version="4.5.0" />
     <PackageReference Include="ModernWpfUI" Version="0.9.4" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
   </ItemGroup>

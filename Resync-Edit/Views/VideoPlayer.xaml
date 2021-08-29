@@ -91,8 +91,8 @@
             <ui:CommandBar.Content>
                 <ui:AppBarButton Icon="Back" Command="{Binding PreviousNavigate}"></ui:AppBarButton>
             </ui:CommandBar.Content>
-            <ui:AppBarButton Icon="Copy" Label="Save a Copy"></ui:AppBarButton>
-            <ui:AppBarButton Icon="Save" Label="Save"></ui:AppBarButton>
+            <ui:AppBarButton Icon="Copy" Label="Save a Copy" Command="{Binding SaveCopyCommand}"></ui:AppBarButton>
+            <ui:AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCommand}"></ui:AppBarButton>
             <ui:CommandBar.SecondaryCommands>
                 <ui:AppBarButton Icon="Setting" Label="Settings"></ui:AppBarButton>
                 <ui:AppBarButton Label="About">

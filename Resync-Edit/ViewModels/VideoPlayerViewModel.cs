@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Mime;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using FFMpegCore;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -27,7 +33,9 @@ namespace Resync_Edit.ViewModels
 
         private string _currentVideo;
 
-        private MediaElement _mediaElement = new MediaElement();
+        private string _currentPath;
+
+        private MediaElement _mediaElement;
 
         private double _minThumb;
 
@@ -71,6 +79,12 @@ namespace Resync_Edit.ViewModels
         {
             get => _currentVideo;
             set => SetProperty(ref _currentVideo, value);
+        }
+
+        public string CurrentPath
+        {
+            get => _currentPath;
+            set => SetProperty(ref _currentPath, value);
         }
 
         public MediaElement MediaElement
@@ -174,6 +188,10 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _previousNavigate;
 
+        private DelegateCommand _saveCopyCommand;
+
+        private DelegateCommand _saveCommand;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -218,6 +236,10 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand PreviousNavigate => _previousNavigate ??= new DelegateCommand(PreviousNavigate_Execute);
 
+        public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
+
+        public DelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(SaveVideo_Execute);
+
         private async void PlayRequested_Execute()
         {
             Play = false;
@@ -257,8 +279,6 @@ namespace Resync_Edit.ViewModels
             MediaElement.PositionChanged -= PositionChanged_Execute;
             MediaElement.MediaOpened += MediaOpened_Execute;
             MediaElement.PositionChanged += PositionChanged_Execute;
-            await MediaElement.Open(new Uri(CurrentVideo));
-            await MediaElement.Play();
         }
 
         private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
@@ -336,21 +356,39 @@ namespace Resync_Edit.ViewModels
 
         private async void PreviousNavigate_Execute()
         {
-            await MediaElement.Pause();
+            await MediaElement.Close();
             _regionManager.RequestNavigate("ContentRegion", "MainMenu");
+        }
+
+        private void SaveCopy_Execute()
+        {
+            string[] currentVideoName = CurrentVideo.Split('.');
+            currentVideoName[^2] = currentVideoName[^2] + "Edit";
+            MessageBox.Show(String.Join("", currentVideoName));
+        }
+
+        private void SaveVideo_Execute()
+        {
         }
 
         public VideoPlayerViewModel(IRegionManager regionManager)
         {
+            MediaElement = new MediaElement();
             Volume = 1;
             _regionManager = regionManager;
             MediaElement.Loaded += MediaLoad_Execute;
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        public async void OnNavigatedTo(NavigationContext navigationContext)
         {
-            VideoLocation = (string) navigationContext.Parameters["UserVideos"];
+            VideoLocation = (string)navigationContext.Parameters["UserVideos"];
             CurrentVideo = VideoLocation;
+            if (!MediaElement.IsLoaded)
+            {
+                await MediaElement.Close();
+            }
+            await MediaElement.Open(new Uri(CurrentVideo));
+            await MediaElement.Play();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
