@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 using FFMpegCore;
+using FFMpegCore.Enums;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -267,6 +269,8 @@ namespace Resync_Edit.ViewModels
             MediaElement.UnloadedBehavior = MediaPlaybackState.Manual;
             MediaElement.LoopingBehavior = MediaPlaybackState.Play;
             MediaElement.ScrubbingEnabled = true;
+            MediaElement.MediaOpened -= MediaOpened_Execute;
+            MediaElement.PositionChanged -= PositionChanged_Execute;
             MediaElement.MediaOpened += MediaOpened_Execute;
             MediaElement.PositionChanged += PositionChanged_Execute;
         }
@@ -350,11 +354,24 @@ namespace Resync_Edit.ViewModels
             _regionManager.RequestNavigate("ContentRegion", "MainMenu");
         }
 
-        private void SaveCopy_Execute()
+        private async void SaveCopy_Execute()
         {
-            string[] currentVideoName = CurrentVideo.Split('.');
-            currentVideoName[^2] = currentVideoName[^2] + "Edit";
-            MessageBox.Show(String.Join("", currentVideoName));
+            SaveFileDialog fileSave = new SaveFileDialog();
+            fileSave.Title = "Select Location to Save Copy";
+            fileSave.ShowDialog();
+
+            if (fileSave.FileName != "")
+            {
+                await FFMpegArguments.FromFileInput(CurrentVideo, true, options => options
+                        .UsingMultithreading(true)
+                        .Seek(TimeSpan.FromSeconds(SelectionStart))
+                        .WithDuration(TimeSpan.FromSeconds(SelectionEnd)))
+                    .OutputToFile(fileSave.FileName, true, options => options
+                        .WithCustomArgument("-c copy")
+                        .WithFastStart())
+                    .ProcessAsynchronously();
+                MessageBox.Show("done");
+            }
         }
 
         private void SaveVideo_Execute()

@@ -37,17 +37,13 @@ namespace Resync_Edit.ViewModels
             {
                 fileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
                 fileDialog.RestoreDirectory = true;
-                if (fileDialog.ShowDialog() == DialogResult.OK)
+                if (fileDialog.ShowDialog() != DialogResult.OK) return;
+                filePath = fileDialog.FileName;
+                var navigationParameters = new NavigationParameters
                 {
-                    filePath = fileDialog.FileName;
-                    var navigationParameters = new NavigationParameters();
-                    navigationParameters.Add("UserVideos", fileDialog.FileName);
-                    _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
-                }
-                else
-                {
-                    MessageBox.Show("Error: No File");
-                }
+                    { "UserVideos", fileDialog.FileName }
+                };
+                _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
             }
         }
 
