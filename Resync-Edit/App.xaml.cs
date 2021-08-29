@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using FFMpegCore;
@@ -24,11 +25,13 @@ namespace Resync_Edit
             if (!Directory.Exists(Path.Join(Path.GetTempPath(), "Resync-Temp")))
                 Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "Resync-Temp"));
             Unosquare.FFME.Library.FFmpegDirectory =
-                @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin";
+                Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"ffmpeg\bin");
+                // @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin";
             GlobalFFOptions.Configure(new FFOptions
             {
-                BinaryFolder =
-                    @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin",
+                BinaryFolder = 
+                Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"ffmpeg\bin"),
+                 //   @"C:\Users\Nevin\source\repos\Resync-Edit\Resync-Edit\bin\Debug\net5.0-windows10.0.19041.0\ffmpeg\bin",
                 TemporaryFilesFolder = Path.Join(Path.GetTempPath(), "Resync-Temp")
             });
         }
