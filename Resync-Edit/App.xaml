@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:Resync_Edit"
              xmlns:ui="http://schemas.modernwpf.com/2019"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:convert="clr-namespace:Resync_Edit.Foundation"
              Startup="PrismApplication_Startup">
     <Application.Resources>
         <ResourceDictionary>
@@ -12,6 +13,7 @@
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter"></BooleanToVisibilityConverter>
+            <convert:TimeSpanToSecondsConverter x:Key="TimeSpanToSecondsConverter"></convert:TimeSpanToSecondsConverter>
         </ResourceDictionary>
     </Application.Resources>
 </prism:PrismApplication>

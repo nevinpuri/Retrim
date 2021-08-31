@@ -79,5 +79,12 @@ namespace Resync_Edit.Views
         {
             Focus();
         }
+
+        private async void MyVideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await MyVideoPlayer.Open(
+                new Uri(@"C:\Users\Nevin\Desktop\20210803_230743.mp4"));
+            await MyVideoPlayer.Play();
+        }
     }
 }

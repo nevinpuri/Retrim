@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
@@ -49,6 +50,8 @@ namespace Resync_Edit.ViewModels
         private double _duration;
 
         private TimeSpan _currentTime;
+
+        private double _templateTime;
 
         private double _seekPosition;
 
@@ -139,6 +142,12 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _exporting, value);
         }
 
+        public double TemplateTime
+        {
+            get => _templateTime;
+            set => SetProperty(ref _templateTime, value);
+        }
+
         public event EventHandler PlayRequested;
 
         public event EventHandler PauseRequested;
@@ -167,9 +176,7 @@ namespace Resync_Edit.ViewModels
         private DelegateCommand _mediaLoadCommand;
         */
 
-        /*
         private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
-        */
 
         private DelegateCommand _sliderDragStartCommand;
 
@@ -213,10 +220,8 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand<DragDeltaEventArgs> MaxThumbChangedCommand => _maxThumbChangedCommand ??=
             new DelegateCommand<DragDeltaEventArgs>(MaxThumbChanged_Execute);
 
-        /*
         public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
             new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
-        */
 
         public DelegateCommand SliderDragStartCommand =>
             _sliderDragStartCommand ??= new DelegateCommand(SliderDragStart_Execute);
@@ -276,10 +281,10 @@ namespace Resync_Edit.ViewModels
             MediaElement.UnloadedBehavior = MediaPlaybackState.Manual;
             MediaElement.LoopingBehavior = MediaPlaybackState.Play;
             MediaElement.ScrubbingEnabled = true;
-            MediaElement.MediaOpened -= MediaOpened_Execute;
-            MediaElement.PositionChanged -= PositionChanged_Execute;
-            MediaElement.MediaOpened += MediaOpened_Execute;
-            MediaElement.PositionChanged += PositionChanged_Execute;
+            //MediaElement.MediaOpened -= MediaOpened_Execute;
+            //MediaElement.PositionChanged -= PositionChanged_Execute;
+            //MediaElement.MediaOpened += MediaOpened_Execute;
+            //MediaElement.PositionChanged += PositionChanged_Execute;
         }
 
         private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
@@ -316,26 +321,30 @@ namespace Resync_Edit.ViewModels
             }
         }
 
-        private void MediaOpened_Execute(object sender, MediaOpenedEventArgs e)
+        private void MediaOpened_Execute(MediaOpenedEventArgs e)
         {
             Duration = e.Info.Duration.TotalSeconds;
         }
 
         private async void SliderDragStart_Execute()
         {
+            /*
             await MediaElement.Pause();
             CurrentTime = TimeSpan.FromSeconds(SeekPosition);
             await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
             // PauseRequested?.Invoke(this, EventArgs.Empty);
+            */
         }
 
         private async void SliderDragEnd_Execute()
         {
+            /*
             // CurrentTime = TimeSpan.FromSeconds(SeekPosition);
             CurrentTime = TimeSpan.FromSeconds(SeekPosition);
             await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
             if (Pause) await MediaElement.Play();
             // MainSeekRequested?.Invoke(this, new SeekEventArgs(SeekPosition, Pause));
+            */
         }
 
         public void PositionChanged_Execute(object sender, PositionChangedEventArgs e)
@@ -394,10 +403,10 @@ namespace Resync_Edit.ViewModels
 
         public VideoPlayerViewModel(IRegionManager regionManager)
         {
-            MediaElement = new MediaElement();
+            // MediaElement = new MediaElement();
             Volume = 1;
             _regionManager = regionManager;
-            MediaElement.Loaded += MediaLoad_Execute;
+            // MediaElement.Loaded += MediaLoad_Execute;
         }
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
@@ -406,12 +415,14 @@ namespace Resync_Edit.ViewModels
             CurrentVideo = VideoLocation;
             MinThumb = 0;
             MaxThumb = 750;
+            /*
             if (!MediaElement.IsLoaded)
             {
                 await MediaElement.Close();
             }
             await MediaElement.Open(new Uri(CurrentVideo));
             await MediaElement.Play();
+            */
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
