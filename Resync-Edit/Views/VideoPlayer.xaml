@@ -85,20 +85,6 @@
         </StackPanel>
         </Grid>
         </StackPanel>
-        <ui:CommandBar Grid.Row="0" Background="Transparent">
-            <ui:CommandBar.Content>
-                <ui:AppBarButton Icon="Back" Command="{Binding PreviousNavigate}"></ui:AppBarButton>
-            </ui:CommandBar.Content>
-            <ui:AppBarButton Icon="Save" Label="Save" Command="{Binding SaveCopyCommand}"></ui:AppBarButton>
-            <ui:CommandBar.SecondaryCommands>
-                <ui:AppBarButton Command="{Binding SettingsCommand}" Icon="Setting" Label="Settings"></ui:AppBarButton>
-                <ui:AppBarButton Command="{Binding AboutCommand}" Label="About">
-                    <ui:AppBarButton.Icon>
-                        <ui:SymbolIcon Symbol="ContactInfo"></ui:SymbolIcon>
-                    </ui:AppBarButton.Icon>
-                </ui:AppBarButton>
-            </ui:CommandBar.SecondaryCommands>
-        </ui:CommandBar>
         <Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding Exporting, Converter={StaticResource BoolToVisConverter}}">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.95"></SolidColorBrush>

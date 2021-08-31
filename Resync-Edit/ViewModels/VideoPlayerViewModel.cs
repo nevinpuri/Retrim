@@ -190,7 +190,6 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _muteCommand;
 
-        private DelegateCommand _previousNavigate;
 
         private DelegateCommand _saveCopyCommand;
 
@@ -237,8 +236,6 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand PlayPauseToggleCommand =>
             _playPauseToggleCommand ??= new DelegateCommand(PlayPauseToggle_Execute);
         public DelegateCommand MuteCommand => _muteCommand ??= new DelegateCommand(MuteCommand_Execute);
-
-        public DelegateCommand PreviousNavigate => _previousNavigate ??= new DelegateCommand(PreviousNavigate_Execute);
 
         public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
 
@@ -364,11 +361,6 @@ namespace Resync_Edit.ViewModels
             else Volume = 1;
         }
 
-        private async void PreviousNavigate_Execute()
-        {
-            await MediaElement.Close();
-            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
-        }
 
         private async void SaveCopy_Execute()
         {

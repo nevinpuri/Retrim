@@ -36,6 +36,7 @@ namespace Resync_Edit.ViewModels
                 var navigationParameters = new NavigationParameters();
                 navigationParameters.Add("UserVideos", commandLineArgs[0]);
                 _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
+                _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
         }
     }

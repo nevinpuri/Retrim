@@ -44,6 +44,7 @@ namespace Resync_Edit.ViewModels
                     { "UserVideos", fileDialog.FileName }
                 };
                 _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
+                _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
         }
 

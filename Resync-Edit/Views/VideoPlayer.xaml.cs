@@ -83,7 +83,7 @@ namespace Resync_Edit.Views
         private async void MyVideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
         {
             await MyVideoPlayer.Open(
-                new Uri(@"C:\Users\Nevin\Desktop\20210803_230743.mp4"));
+                new Uri(@"C:\Users\Nevin\Videos\Escape From Tarkov\Escape From Tarkov 2021.01.30 - 21.31.19.04.DVR.mp4"));
             await MyVideoPlayer.Play();
         }
     }
