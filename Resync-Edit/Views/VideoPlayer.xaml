@@ -26,7 +26,7 @@
             <RowDefinition Height="8*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement x:Name="MyVideoPlayer" Position="{Binding CurrentTime}" Grid.Row="0" Grid.RowSpan="2" LoadedBehavior="Manual" LoopingBehavior="Play" ScrubbingEnabled="True" Loaded="MyVideoPlayer_OnLoaded">
+        <ffme:MediaElement x:Name="MyVideoPlayer" Position="{Binding CurrentTime}" Grid.Row="0" Grid.RowSpan="2" LoadedBehavior="Manual" LoopingBehavior="Play" ScrubbingEnabled="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MediaOpened">
                     <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>

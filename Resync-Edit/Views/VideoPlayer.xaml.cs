@@ -57,6 +57,7 @@ namespace Resync_Edit.Views
         async void IMediaService.LoadMedia(Uri mediaSrc)
         {
             await MyVideoPlayer.Open(mediaSrc);
+            await MyVideoPlayer.Play();
         }
 
         /*

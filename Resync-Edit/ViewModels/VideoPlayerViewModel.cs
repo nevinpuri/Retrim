@@ -252,11 +252,11 @@ namespace Resync_Edit.ViewModels
             {
                 MinThumb += e.HorizontalChange;
                 // MinThumbChangeRequested?.Invoke(this, new SliderEventArgs(MinThumb + e.HorizontalChange));
-                if (Math.Round(SeekPosition, 1) != Math.Round(SelectionStart, 1))
+                if (Math.Round(CurrentTime.TotalSeconds, 1) != Math.Round(SelectionStart, 1))
                 {
                     CurrentTime = TimeSpan.FromSeconds(SelectionStart);
-                    SeekPosition = SelectionStart;
-                    await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
+                    //SeekPosition = SelectionStart;
+                    //await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
                     // SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
                 }
                 SelectionStart = (MinThumb + e.HorizontalChange) / 750 * Duration;
@@ -268,11 +268,11 @@ namespace Resync_Edit.ViewModels
             if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 747)
             {
                 MaxThumb += e.HorizontalChange;
-                if (Math.Round(SeekPosition, 1) != Math.Round(SelectionEnd, 1))
+                if (Math.Round(CurrentTime.TotalSeconds, 1) != Math.Round(SelectionEnd, 1))
                 {
                     CurrentTime = TimeSpan.FromSeconds(SelectionEnd);
-                    SeekPosition = SelectionEnd;
-                    await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
+                    //SeekPosition = SelectionEnd;
+                    //await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
                     // SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
                 }
                 // MaxThumbChangeRequested?.Invoke(this, new SliderEventArgs(MaxThumb + e.HorizontalChange));
@@ -299,6 +299,7 @@ namespace Resync_Edit.ViewModels
         private void MainLoad_Execute(IMediaService mediaService)
         {
             MediaService = mediaService;
+            MediaService.LoadMedia(new Uri(CurrentVideo));
         }
 
 
