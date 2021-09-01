@@ -30,60 +30,60 @@
         <Label Grid.Row="0" Content="{Binding CurrentTime, Converter={StaticResource TimeSpanToSecondsConverter}}"></Label>
         <!--ContentControl Grid.RowSpan="2" Content="{Binding MediaElement}"></ContentControl-->
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Focusable="False">
-        <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
-        <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7" Height="40">
-                <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding CurrentTime, Converter={StaticResource TimeSpanToSecondsConverter}}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider" Focusable="False" IsMoveToPointEnabled="True">
-                    <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                        <prism:InvokeCommandAction Command="{Binding SliderDragStartCommand}"></prism:InvokeCommandAction>
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                        <prism:InvokeCommandAction Command="{Binding SliderDragEndCommand}"></prism:InvokeCommandAction>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Slider>
-            <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MinThumb}" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MinThumb">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="DragDelta">
-                        <prism:InvokeCommandAction Command="{Binding MinThumbChangedCommand}"></prism:InvokeCommandAction>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Thumb>
-            <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MaxThumb}" Canvas.Top="15" controls:Panel.ZIndex="1" x:Name="MaxThumb">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="DragDelta">
-                        <prism:InvokeCommandAction Command="{Binding MaxThumbChangedCommand}"></prism:InvokeCommandAction>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Thumb>
-        </Canvas>
-        </Grid>
-        <Grid Margin="0, 5">
-        <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Center">
-            <Button controls:Panel.ZIndex="99" Background="Transparent" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
-                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="28"></TextBlock>
-            </Button>
-            <Button Command="{Binding PauseRequestedCommand}" Background="Transparent" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}">
-                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE769;" FontSize="28" />
-            </Button>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 10, 0">
-            <Button Background="Transparent" Focusable="False">
-                <ui:FlyoutService.Flyout>
-                    <ui:Flyout>
-                        <Slider x:Name="Volume" Width="100" Orientation="Horizontal" Maximum="1" Minimum="0" Height="30" Value="{Binding Volume}">
-                            <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="ValueChanged">
-                                        <prism:InvokeCommandAction Command="{Binding VolumeChangedCommand}"></prism:InvokeCommandAction>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                        </Slider>
-                    </ui:Flyout>
-                </ui:FlyoutService.Flyout>
-                <TextBlock FontFamily="Segoe MDl2 Assets" Text="&#xE767;" FontSize="28"></TextBlock>
-            </Button>
-        </StackPanel>
-        </Grid>
+            <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
+                <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7" Height="40">
+                    <Slider Width="750" Canvas.Top="10" Canvas.Left="5" Minimum="0" Value="{Binding CurrentTime, Converter={StaticResource TimeSpanToSecondsConverter}}" Maximum="{Binding Duration}" IsSelectionRangeEnabled="True" SelectionStart="0" HorizontalAlignment="Stretch" SelectionEnd="{Binding Duration}" x:Name="Slider" Focusable="False" IsMoveToPointEnabled="True">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                <prism:InvokeCommandAction Command="{Binding SliderDragStartCommand}"></prism:InvokeCommandAction>
+                            </i:EventTrigger>
+                            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                <prism:InvokeCommandAction Command="{Binding SliderDragEndCommand}"></prism:InvokeCommandAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Slider>
+                    <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MinThumb}" Canvas.Top="15" Panel.ZIndex="1" x:Name="MinThumb">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DragDelta">
+                                <prism:InvokeCommandAction Command="{Binding MinThumbChangedCommand}"></prism:InvokeCommandAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Thumb>
+                    <Thumb Foreground="Black" Background="White" Height="20" Width="10" Canvas.Left="{Binding MaxThumb}" Canvas.Top="15" Panel.ZIndex="1" x:Name="MaxThumb">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="DragDelta">
+                                <prism:InvokeCommandAction Command="{Binding MaxThumbChangedCommand}"></prism:InvokeCommandAction>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Thumb>
+                </Canvas>
+            </Grid>
+            <Grid Margin="0, 5">
+                <StackPanel Orientation="Horizontal" Background="Transparent" HorizontalAlignment="Center">
+                    <Button Panel.ZIndex="99" Background="Transparent" Command="{Binding PlayRequestedCommand}" Visibility="{Binding Play, Converter={StaticResource BoolToVisConverter}}">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE768;" FontSize="28"></TextBlock>
+                    </Button>
+                    <Button Command="{Binding PauseRequestedCommand}" Background="Transparent" Visibility="{Binding Pause, Converter={StaticResource BoolToVisConverter}}">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE769;" FontSize="28" />
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0, 0, 10, 0">
+                    <Button Background="Transparent" Focusable="False">
+                        <ui:FlyoutService.Flyout>
+                            <ui:Flyout>
+                                <Slider x:Name="Volume" Width="100" Orientation="Horizontal" Maximum="1" Minimum="0" Height="30" Value="{Binding Volume}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="ValueChanged">
+                                            <prism:InvokeCommandAction Command="{Binding VolumeChangedCommand}"></prism:InvokeCommandAction>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Slider>
+                            </ui:Flyout>
+                        </ui:FlyoutService.Flyout>
+                        <TextBlock FontFamily="Segoe MDl2 Assets" Text="&#xE767;" FontSize="28"></TextBlock>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </StackPanel>
         <Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding Exporting, Converter={StaticResource BoolToVisConverter}}">
             <Grid.Background>

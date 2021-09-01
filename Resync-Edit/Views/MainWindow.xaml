@@ -17,7 +17,7 @@
                 <prism:InvokeCommandAction Command="{Binding MainWindowLoaded}"></prism:InvokeCommandAction>
             </i:EventTrigger>
         </i:Interaction.Triggers>
-        <ContentControl Panel.ZIndex="50" x:Name="MenuFrame" prism:RegionManager.RegionName="MenuRegion"></ContentControl>
-        <ContentControl x:Name="ContentFrame" prism:RegionManager.RegionName="ContentRegion"></ContentControl>
+        <ContentControl Grid.Row="0" Panel.ZIndex="50" x:Name="MenuFrame" prism:RegionManager.RegionName="MenuRegion"></ContentControl>
+        <ContentControl Grid.Row="0" x:Name="ContentFrame" prism:RegionManager.RegionName="ContentRegion"></ContentControl>
     </Grid>
 </Window>
