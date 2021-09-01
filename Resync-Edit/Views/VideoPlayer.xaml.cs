@@ -22,7 +22,7 @@ namespace Resync_Edit.Views
     /// <summary>
     /// Interaction logic for VideoPlayer.xaml
     /// </summary>
-    public partial class VideoPlayer : UserControl
+    public partial class VideoPlayer : UserControl, IMediaService
     {
         // VideoPlayerViewModel vm = new VideoPlayerViewModel();
         public VideoPlayer()
@@ -37,6 +37,26 @@ namespace Resync_Edit.Views
             vm.SeekChangeRequested += MediaPlayer_SeekChangeRequested;
             vm.MainSeekRequested += MediaPlayer_MainSeekChangeRequested;
             */
+        }
+
+        async void IMediaService.Play()
+        {
+            await MyVideoPlayer.Play();
+        }
+
+        async void IMediaService.Pause()
+        {
+            await MyVideoPlayer.Pause();
+        }
+
+        async void IMediaService.Stop()
+        {
+            await MyVideoPlayer.Stop();
+        }
+
+        async void IMediaService.LoadMedia(Uri mediaSrc)
+        {
+            await MyVideoPlayer.Open(mediaSrc);
         }
 
         /*
@@ -83,7 +103,7 @@ namespace Resync_Edit.Views
         private async void MyVideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
         {
             await MyVideoPlayer.Open(
-                new Uri(@"C:\Users\Nevin\Videos\Escape From Tarkov\Escape From Tarkov 2021.01.30 - 21.31.19.04.DVR.mp4"));
+                new Uri(@"C:\Users\Nevin\Desktop\20210803_230743.mp4"));
             await MyVideoPlayer.Play();
         }
     }

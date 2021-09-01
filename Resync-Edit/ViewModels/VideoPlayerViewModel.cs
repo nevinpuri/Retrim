@@ -14,8 +14,10 @@ using FFMpegCore.Enums;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Resync_Edit.Events;
 using Unosquare.FFME;
 using Unosquare.FFME.Common;
 
@@ -23,6 +25,7 @@ namespace Resync_Edit.ViewModels
 {
     class VideoPlayerViewModel : BindableBase, INavigationAware
     {
+        public IMediaService MediaService { get; private set; }
         private string _title;
 
         private string _videoLocation;
@@ -32,8 +35,6 @@ namespace Resync_Edit.ViewModels
         private bool _pause = true;
 
         private double _volume;
-
-        private IRegionManager _regionManager;
 
         private string _currentVideo;
 
@@ -142,24 +143,6 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _exporting, value);
         }
 
-        public double TemplateTime
-        {
-            get => _templateTime;
-            set => SetProperty(ref _templateTime, value);
-        }
-
-        public event EventHandler PlayRequested;
-
-        public event EventHandler PauseRequested;
-
-        public event EventHandler CloseRequested;
-
-        public event EventHandler<VolumeEventArgs> VolumeChangeRequested;
-
-        public event EventHandler<SliderEventArgs> SeekChangeRequested;
-
-        public event EventHandler<SeekEventArgs> MainSeekRequested;
-
         private DelegateCommand _playRequestedCommand;
 
         private DelegateCommand _pauseRequestedCommand;
@@ -172,15 +155,7 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<RoutedPropertyChangedEventArgs<double>> _volumeChangedCommand;
 
-        /*
-        private DelegateCommand _mediaLoadCommand;
-        */
-
         private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
-
-        private DelegateCommand _sliderDragStartCommand;
-
-        private DelegateCommand _sliderDragEndCommand;
 
         /*
         private DelegateCommand<PositionChangedEventArgs> _positionChangedCommand;
@@ -190,12 +165,13 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _muteCommand;
 
-
         private DelegateCommand _saveCopyCommand;
 
         private DelegateCommand _saveCommand;
 
         private DelegateCommand _settingsCommand;
+
+        private DelegateCommand<IMediaService> _mainLoadCommand;
 
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
@@ -209,6 +185,12 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand<RoutedPropertyChangedEventArgs<double>> VolumeChangedCommand =>
             _volumeChangedCommand ??= new DelegateCommand<RoutedPropertyChangedEventArgs<double>>(VolumeChanged_Execute);
 
+        public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
+            new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
+
+        public DelegateCommand<IMediaService> MainLoadCommand =>
+            _mainLoadCommand ??= new DelegateCommand<IMediaService>(MainLoad_Execute);
+
         /*
         public DelegateCommand MediaLoadCommand => _mediaLoadCommand ??= new DelegateCommand(MediaLoad_Execute);
         */
@@ -218,20 +200,6 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand<DragDeltaEventArgs> MaxThumbChangedCommand => _maxThumbChangedCommand ??=
             new DelegateCommand<DragDeltaEventArgs>(MaxThumbChanged_Execute);
-
-        public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
-            new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
-
-        public DelegateCommand SliderDragStartCommand =>
-            _sliderDragStartCommand ??= new DelegateCommand(SliderDragStart_Execute);
-
-        public DelegateCommand SliderDragEndCommand =>
-            _sliderDragEndCommand ??= new DelegateCommand(SliderDragEnd_Execute);
-
-        /*
-        public DelegateCommand<PositionChangedEventArgs> PositionChangedCommand => _positionChangedCommand ??=
-            new DelegateCommand<PositionChangedEventArgs>(PositionChanged_Execute);
-        */
 
         public DelegateCommand PlayPauseToggleCommand =>
             _playPauseToggleCommand ??= new DelegateCommand(PlayPauseToggle_Execute);
@@ -243,33 +211,31 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand SettingsCommand => _settingsCommand ??= new DelegateCommand(SettingsShow_Execute);
 
-        private async void PlayRequested_Execute()
+        private void PlayRequested_Execute()
         {
             Play = false;
             Pause = true;
-            await MediaElement.Play();
-            // PlayRequested(this, EventArgs.Empty);
+            MediaService.Play();
+            //await MediaElement.Play();
         }
 
-        private async void PauseRequested_Execute()
+        private void PauseRequested_Execute()
         {
             Play = true;
             Pause = false;
-            await MediaElement.Pause();
-            // PauseRequested(this, EventArgs.Empty);
+            MediaService.Pause();
+            //await MediaElement.Pause();
         }
 
         private async void CloseRequested_Execute()
         {
             await MediaElement.Close();
-            // CloseRequested?.Invoke(this, EventArgs.Empty);
         }
 
         private void VolumeChanged_Execute(RoutedPropertyChangedEventArgs<double> e)
         {
             Volume = e.NewValue;
             MediaElement.Volume = e.NewValue;
-            // VolumeChangeRequested?.Invoke(this, new VolumeEventArgs(e.NewValue));
         }
 
         private async void MediaLoad_Execute(object sender, RoutedEventArgs e)
@@ -278,10 +244,6 @@ namespace Resync_Edit.ViewModels
             MediaElement.UnloadedBehavior = MediaPlaybackState.Manual;
             MediaElement.LoopingBehavior = MediaPlaybackState.Play;
             MediaElement.ScrubbingEnabled = true;
-            //MediaElement.MediaOpened -= MediaOpened_Execute;
-            //MediaElement.PositionChanged -= PositionChanged_Execute;
-            //MediaElement.MediaOpened += MediaOpened_Execute;
-            //MediaElement.PositionChanged += PositionChanged_Execute;
         }
 
         private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
@@ -323,32 +285,6 @@ namespace Resync_Edit.ViewModels
             Duration = e.Info.Duration.TotalSeconds;
         }
 
-        private async void SliderDragStart_Execute()
-        {
-            /*
-            await MediaElement.Pause();
-            CurrentTime = TimeSpan.FromSeconds(SeekPosition);
-            await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
-            // PauseRequested?.Invoke(this, EventArgs.Empty);
-            */
-        }
-
-        private async void SliderDragEnd_Execute()
-        {
-            /*
-            // CurrentTime = TimeSpan.FromSeconds(SeekPosition);
-            CurrentTime = TimeSpan.FromSeconds(SeekPosition);
-            await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
-            if (Pause) await MediaElement.Play();
-            // MainSeekRequested?.Invoke(this, new SeekEventArgs(SeekPosition, Pause));
-            */
-        }
-
-        public void PositionChanged_Execute(object sender, PositionChangedEventArgs e)
-        {
-            SeekPosition = e.Position.TotalSeconds;
-        }
-
         private void PlayPauseToggle_Execute()
         {
             if (Play) PlayRequested_Execute();
@@ -357,8 +293,12 @@ namespace Resync_Edit.ViewModels
 
         private void MuteCommand_Execute()
         {
-            if (Volume > 0) Volume = 0;
-            else Volume = 1;
+            Volume = Volume > 0 ? 0 : 1;
+        }
+
+        private void MainLoad_Execute(IMediaService mediaService)
+        {
+            MediaService = mediaService;
         }
 
 
@@ -393,12 +333,9 @@ namespace Resync_Edit.ViewModels
         {
         }
 
-        public VideoPlayerViewModel(IRegionManager regionManager)
+        public VideoPlayerViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
-            // MediaElement = new MediaElement();
             Volume = 1;
-            _regionManager = regionManager;
-            // MediaElement.Loaded += MediaLoad_Execute;
         }
 
         public async void OnNavigatedTo(NavigationContext navigationContext)
@@ -407,14 +344,6 @@ namespace Resync_Edit.ViewModels
             CurrentVideo = VideoLocation;
             MinThumb = 0;
             MaxThumb = 750;
-            /*
-            if (!MediaElement.IsLoaded)
-            {
-                await MediaElement.Close();
-            }
-            await MediaElement.Open(new Uri(CurrentVideo));
-            await MediaElement.Play();
-            */
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

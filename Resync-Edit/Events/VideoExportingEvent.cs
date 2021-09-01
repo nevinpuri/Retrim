@@ -7,7 +7,7 @@ using Prism.Events;
 
 namespace Resync_Edit.Events
 {
-    public class VideoPlayerEvent : PubSubEvent<string>
+    public class VideoExportingEvent : PubSubEvent<bool>
     {
     }
 }
