@@ -28,6 +28,7 @@ namespace Resync_Edit.Views
         public VideoPlayer()
         {
             InitializeComponent();
+            MyVideoPlayer.RendererOptions.UseLegacyAudioOut = true;
             // this.DataContext = vm;
             /*
             vm.PlayRequested += MediaPlayer_PlayRequested;

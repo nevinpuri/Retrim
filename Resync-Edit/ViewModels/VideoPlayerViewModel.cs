@@ -23,7 +23,7 @@ using Unosquare.FFME.Common;
 
 namespace Resync_Edit.ViewModels
 {
-    class VideoPlayerViewModel : BindableBase, INavigationAware
+    class VideoPlayerViewModel : BindableBase, INavigationAware, IRegionMemberLifetime
     {
         public IMediaService MediaService { get; private set; }
         private string _title;
@@ -57,6 +57,8 @@ namespace Resync_Edit.ViewModels
         private double _seekPosition;
 
         private bool _exporting;
+
+        public bool KeepAlive => false;
 
         public bool Play
         {
@@ -157,6 +159,8 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
 
+        private DelegateCommand _loadedCommand;
+
         /*
         private DelegateCommand<PositionChangedEventArgs> _positionChangedCommand;
         */
@@ -187,6 +191,13 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
             new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
+
+        public DelegateCommand LoadedCommand => _loadedCommand ??= new DelegateCommand(ExecuteMethod);
+
+        private void ExecuteMethod()
+        {
+            MediaService?.LoadMedia(new Uri(CurrentVideo));
+        }
 
         public DelegateCommand<IMediaService> MainLoadCommand =>
             _mainLoadCommand ??= new DelegateCommand<IMediaService>(MainLoad_Execute);
@@ -339,10 +350,11 @@ namespace Resync_Edit.ViewModels
             Volume = 1;
         }
 
-        public async void OnNavigatedTo(NavigationContext navigationContext)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
             VideoLocation = (string)navigationContext.Parameters["UserVideos"];
             CurrentVideo = VideoLocation;
+            CurrentTime = TimeSpan.FromSeconds(0);
             MinThumb = 0;
             MaxThumb = 750;
         }

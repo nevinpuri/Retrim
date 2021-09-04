@@ -26,13 +26,14 @@
             <RowDefinition Height="8*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
-        <ffme:MediaElement x:Name="MyVideoPlayer" Position="{Binding CurrentTime}" Grid.Row="0" Grid.RowSpan="2" LoadedBehavior="Manual" LoopingBehavior="Play" ScrubbingEnabled="True">
+        <ffme:MediaElement x:Name="MyVideoPlayer" Position="{Binding CurrentTime}" Grid.Row="0" Grid.RowSpan="2" LoopingBehavior="Play" ScrubbingEnabled="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MediaOpened">
                     <prism:InvokeCommandAction Command="{Binding MediaOpenedCommand}"></prism:InvokeCommandAction>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ffme:MediaElement>
+        <Button Grid.Row="0" controls:Panel.ZIndex="99" Command="{Binding LoadedCommand}">Click me</Button>
         <Label Grid.Row="0" Content="{Binding CurrentTime, Converter={StaticResource TimeSpanToSecondsConverter}}"></Label>
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Focusable="False">
             <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
