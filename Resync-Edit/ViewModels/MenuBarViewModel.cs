@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using ABI.Windows.Devices.Bluetooth.Background;
+using FFMpegCore;
+using Microsoft.Toolkit.Uwp.Notifications;
+using Microsoft.Win32;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -16,7 +21,13 @@ namespace Resync_Edit.ViewModels
 
         private string _currentlyLoadedVideo;
 
+        private double _minThumb = Double.NaN;
+
+        private double _maxThumb =  Double.NaN;
+
         private IRegionManager _regionManager;
+
+        private IEventAggregator _eventAggregator;
 
         public string CurrentlyLoadedVideo
         {
@@ -24,19 +35,70 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _currentlyLoadedVideo, value);
         }
 
+        public double MinThumb
+        {
+            get => _minThumb;
+            set => SetProperty(ref _minThumb, value);
+        }
+
+        public double MaxThumb
+        {
+            get => _maxThumb;
+            set => SetProperty(ref _maxThumb, value);
+        }
+
         private DelegateCommand _previousNavigate;
         public DelegateCommand PreviousNavigate => _previousNavigate ??= new DelegateCommand(PreviousNavigate_Execute);
+
+        private DelegateCommand _saveCopyCommand;
+
+        public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
+
+        private async void SaveCopy_Execute()
+        {
+            MessageBox.Show(CurrentlyLoadedVideo);
+            if (CurrentlyLoadedVideo is null || Double.IsNaN(MinThumb) || Double.IsNaN(MaxThumb)) return;
+            SaveFileDialog fileSave = new SaveFileDialog
+            {
+                Title = "Select Location to Save Copy"
+            };
+            fileSave.ShowDialog();
+
+            if (fileSave.FileName == "") return;
+            _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
+            await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
+                    .UsingMultithreading(true)
+                    .Seek(TimeSpan.FromSeconds(MinThumb))
+                    .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
+                .OutputToFile(fileSave.FileName, true, options => options
+                    .WithCustomArgument("-c copy")
+                    .WithFastStart())
+                .ProcessAsynchronously();
+            _eventAggregator.GetEvent<VideoExportingEvent>().Publish(false);
+            new ToastContentBuilder().AddText("Your video has finished exporting!").Show();
+            MessageBox.Show("done");
+        }
 
         public MenuBarViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
-            eventAggregator.GetEvent<VideoPlayerEvent>().Subscribe(s => CurrentlyLoadedVideo = s);
+            _eventAggregator = eventAggregator;
+            eventAggregator.GetEvent<VideoPlayerEvent>().Subscribe(s =>
+            {
+                MessageBox.Show(s);
+                CurrentlyLoadedVideo = s;
+            });
+            eventAggregator.GetEvent<ThumbChangeEvent>().Subscribe(args =>
+            {
+                MinThumb = args.MinThumb;
+                MaxThumb = args.MaxThumb;
+            });
         }
 
-        private async void PreviousNavigate_Execute()
+        private void PreviousNavigate_Execute()
         {
             _regionManager.RequestNavigate("ContentRegion", "MainMenu");
-            //_regionManager.Deactivate("MenuBar");
+        //_regionManager.Deactivate("MenuBar");
         }
     }
 }

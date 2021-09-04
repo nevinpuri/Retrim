@@ -108,5 +108,10 @@ namespace Resync_Edit.Views
                 new Uri(@"C:\Users\Nevin\Desktop\20210803_230743.mp4"));
             await MyVideoPlayer.Play();
         }
+
+        private void MinThumb_OnDragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            MessageBox.Show("ok");
+        }
     }
 }

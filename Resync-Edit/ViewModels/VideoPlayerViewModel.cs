@@ -26,6 +26,8 @@ namespace Resync_Edit.ViewModels
     class VideoPlayerViewModel : BindableBase, INavigationAware, IRegionMemberLifetime
     {
         public IMediaService MediaService { get; private set; }
+
+        public IEventAggregator _eventAggregator;
         private string _title;
 
         private string _videoLocation;
@@ -159,8 +161,6 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<MediaOpenedEventArgs> _mediaOpenedCommand;
 
-        private DelegateCommand _loadedCommand;
-
         /*
         private DelegateCommand<PositionChangedEventArgs> _positionChangedCommand;
         */
@@ -177,6 +177,8 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand<IMediaService> _mainLoadCommand;
 
+        private DelegateCommand _thumbCompletedCommand;
+
         public DelegateCommand PlayRequestedCommand =>
             _playRequestedCommand ??= new DelegateCommand(PlayRequested_Execute);
 
@@ -192,15 +194,17 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand<MediaOpenedEventArgs> MediaOpenedCommand => _mediaOpenedCommand ??=
             new DelegateCommand<MediaOpenedEventArgs>(MediaOpened_Execute);
 
-        public DelegateCommand LoadedCommand => _loadedCommand ??= new DelegateCommand(ExecuteMethod);
-
-        private void ExecuteMethod()
-        {
-            MediaService?.LoadMedia(new Uri(CurrentVideo));
-        }
-
         public DelegateCommand<IMediaService> MainLoadCommand =>
             _mainLoadCommand ??= new DelegateCommand<IMediaService>(MainLoad_Execute);
+
+        public DelegateCommand ThumbCompletedCommand =>
+            _thumbCompletedCommand ??= new DelegateCommand(ThumbCompleted_Execute);
+
+        public void ThumbCompleted_Execute()
+        {
+            _eventAggregator.GetEvent<ThumbChangeEvent>().Publish(new ThumbEventArgs()
+                { MinThumb = SelectionStart, MaxThumb = SelectionEnd });
+        }
 
         /*
         public DelegateCommand MediaLoadCommand => _mediaLoadCommand ??= new DelegateCommand(MediaLoad_Execute);
@@ -293,6 +297,7 @@ namespace Resync_Edit.ViewModels
 
         private void MediaOpened_Execute(MediaOpenedEventArgs e)
         {
+            _eventAggregator.GetEvent<VideoPlayerEvent>().Publish(CurrentVideo);
             Duration = e.Info.Duration.TotalSeconds;
         }
 
@@ -316,6 +321,7 @@ namespace Resync_Edit.ViewModels
 
         private async void SaveCopy_Execute()
         {
+            /*
             SaveFileDialog fileSave = new SaveFileDialog();
             fileSave.Title = "Select Location to Save Copy";
             fileSave.ShowDialog();
@@ -335,6 +341,7 @@ namespace Resync_Edit.ViewModels
                 new ToastContentBuilder().AddText("Your video has finished exporting!").Show();
                 MessageBox.Show("done");
             }
+            */
         }
 
         private void SaveVideo_Execute()
@@ -345,18 +352,25 @@ namespace Resync_Edit.ViewModels
         {
         }
 
-        public VideoPlayerViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public VideoPlayerViewModel(IEventAggregator eventAggregator)
         {
             Volume = 1;
+            _eventAggregator = eventAggregator;
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             VideoLocation = (string)navigationContext.Parameters["UserVideos"];
             CurrentVideo = VideoLocation;
+            _eventAggregator.GetEvent<VideoExportingEvent>().Subscribe(VideoExportingAction);
             CurrentTime = TimeSpan.FromSeconds(0);
             MinThumb = 0;
             MaxThumb = 750;
+        }
+
+        private void VideoExportingAction(bool obj)
+        {
+            Exporting = obj;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

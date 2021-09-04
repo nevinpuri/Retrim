@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Resync_Edit
 {
-    public enum VideoEventState
+    public class ThumbEventArgs
     {
-        VideoLoaded,
+        public double MinThumb { get; set; }
+
+        public double MaxThumb { get; set; }
     }
 }
