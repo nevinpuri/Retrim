@@ -169,10 +169,6 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _muteCommand;
 
-        private DelegateCommand _saveCopyCommand;
-
-        private DelegateCommand _saveCommand;
-
         private DelegateCommand _settingsCommand;
 
         private DelegateCommand<IMediaService> _mainLoadCommand;
@@ -206,10 +202,6 @@ namespace Resync_Edit.ViewModels
                 { MinThumb = SelectionStart, MaxThumb = SelectionEnd });
         }
 
-        /*
-        public DelegateCommand MediaLoadCommand => _mediaLoadCommand ??= new DelegateCommand(MediaLoad_Execute);
-        */
-
         public DelegateCommand<DragDeltaEventArgs> MinThumbChangedCommand => _minThumbChangedCommand ??=
             new DelegateCommand<DragDeltaEventArgs>(MinThumbChanged_Execute);
 
@@ -220,10 +212,6 @@ namespace Resync_Edit.ViewModels
             _playPauseToggleCommand ??= new DelegateCommand(PlayPauseToggle_Execute);
         public DelegateCommand MuteCommand => _muteCommand ??= new DelegateCommand(MuteCommand_Execute);
 
-        public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
-
-        public DelegateCommand SaveCommand => _saveCommand ??= new DelegateCommand(SaveVideo_Execute);
-
         public DelegateCommand SettingsCommand => _settingsCommand ??= new DelegateCommand(SettingsShow_Execute);
 
         private void PlayRequested_Execute()
@@ -231,7 +219,6 @@ namespace Resync_Edit.ViewModels
             Play = false;
             Pause = true;
             MediaService.Play();
-            //await MediaElement.Play();
         }
 
         private void PauseRequested_Execute()
@@ -239,7 +226,6 @@ namespace Resync_Edit.ViewModels
             Play = true;
             Pause = false;
             MediaService.Pause();
-            //await MediaElement.Pause();
         }
 
         private async void CloseRequested_Execute()
@@ -253,28 +239,19 @@ namespace Resync_Edit.ViewModels
             MediaElement.Volume = e.NewValue;
         }
 
-        private async void MediaLoad_Execute(object sender, RoutedEventArgs e)
-        {
-            MediaElement.LoadedBehavior = MediaPlaybackState.Manual;
-            MediaElement.UnloadedBehavior = MediaPlaybackState.Manual;
-            MediaElement.LoopingBehavior = MediaPlaybackState.Play;
-            MediaElement.ScrubbingEnabled = true;
-        }
-
         private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
         {
             if (MinThumb + e.HorizontalChange < MaxThumb && MinThumb + e.HorizontalChange > 0)
             {
                 MinThumb += e.HorizontalChange;
-                // MinThumbChangeRequested?.Invoke(this, new SliderEventArgs(MinThumb + e.HorizontalChange));
+                SelectionStart = (MinThumb + e.HorizontalChange) / 750 * Duration;
+                /*
                 if (Math.Round(CurrentTime.TotalSeconds, 1) != Math.Round(SelectionStart, 1))
                 {
                     CurrentTime = TimeSpan.FromSeconds(SelectionStart);
-                    //SeekPosition = SelectionStart;
-                    //await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
-                    // SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
                 }
-                SelectionStart = (MinThumb + e.HorizontalChange) / 750 * Duration;
+                */
+                CurrentTime = TimeSpan.FromSeconds(SelectionStart);
             }
         }
 
@@ -283,15 +260,14 @@ namespace Resync_Edit.ViewModels
             if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 747)
             {
                 MaxThumb += e.HorizontalChange;
+                SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * Duration;
+                /*
                 if (Math.Round(CurrentTime.TotalSeconds, 1) != Math.Round(SelectionEnd, 1))
                 {
                     CurrentTime = TimeSpan.FromSeconds(SelectionEnd);
-                    //SeekPosition = SelectionEnd;
-                    //await MediaElement.Seek(TimeSpan.FromSeconds(SeekPosition));
-                    // SeekChangeRequested?.Invoke(this, new SliderEventArgs(SeekPosition));
                 }
-                // MaxThumbChangeRequested?.Invoke(this, new SliderEventArgs(MaxThumb + e.HorizontalChange));
-                SelectionEnd = (MaxThumb + e.HorizontalChange) / 750 * Duration;
+                */
+                CurrentTime = TimeSpan.FromSeconds(SelectionEnd);
             }
         }
 
@@ -318,36 +294,6 @@ namespace Resync_Edit.ViewModels
             MediaService.LoadMedia(new Uri(CurrentVideo));
         }
 
-
-        private async void SaveCopy_Execute()
-        {
-            /*
-            SaveFileDialog fileSave = new SaveFileDialog();
-            fileSave.Title = "Select Location to Save Copy";
-            fileSave.ShowDialog();
-
-            if (fileSave.FileName != "")
-            {
-                Exporting = true;
-                await FFMpegArguments.FromFileInput(CurrentVideo, true, options => options
-                        .UsingMultithreading(true)
-                        .Seek(TimeSpan.FromSeconds(SelectionStart))
-                        .WithDuration(TimeSpan.FromSeconds(SelectionEnd)))
-                    .OutputToFile(fileSave.FileName, true, options => options
-                        .WithCustomArgument("-c copy")
-                        .WithFastStart())
-                    .ProcessAsynchronously();
-                Exporting = false;
-                new ToastContentBuilder().AddText("Your video has finished exporting!").Show();
-                MessageBox.Show("done");
-            }
-            */
-        }
-
-        private void SaveVideo_Execute()
-        {
-        }
-
         private void SettingsShow_Execute()
         {
         }
@@ -356,6 +302,11 @@ namespace Resync_Edit.ViewModels
         {
             Volume = 1;
             _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<VideoPlayEvent>().Subscribe(b =>
+            {
+                if (b) PlayRequested_Execute();
+                else PauseRequested_Execute();
+            });
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

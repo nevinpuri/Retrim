@@ -29,15 +29,6 @@ namespace Resync_Edit.Views
         {
             InitializeComponent();
             MyVideoPlayer.RendererOptions.UseLegacyAudioOut = true;
-            // this.DataContext = vm;
-            /*
-            vm.PlayRequested += MediaPlayer_PlayRequested;
-            vm.PauseRequested += MediaPlayer_PauseRequested;
-            vm.CloseRequested += MediaPlayer_CloseRequested;
-            vm.VolumeChangeRequested += MediaPlayer_VolumeChangeRequested;
-            vm.SeekChangeRequested += MediaPlayer_SeekChangeRequested;
-            vm.MainSeekRequested += MediaPlayer_MainSeekChangeRequested;
-            */
         }
 
         async void IMediaService.Play()
@@ -61,57 +52,9 @@ namespace Resync_Edit.Views
             await MyVideoPlayer.Play();
         }
 
-        /*
-        private async void MediaPlayer_PlayRequested(object sender, EventArgs e) => await Media.Play();
-
-        private async void MediaPlayer_PauseRequested(object sender, EventArgs e) => await Media.Pause();
-
-        private async void MediaPlayer_CloseRequested(object sender, EventArgs e) => await Media.Close();
-
-        private void MediaPlayer_VolumeChangeRequested(object sender, VolumeEventArgs e) => Media.Volume = e.Volume;
-
-        private async void Media_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!(vm.CurrentVideo is null))
-            {
-                Media.ScrubbingEnabled = true;
-                await Media.Open(new Uri(vm.CurrentVideo));
-                await Media.Play();
-            }
-            else
-            {
-                MessageBox.Show("Error: No Video");
-            }
-        }
-
-        private async void MediaPlayer_SeekChangeRequested(object sender, SliderEventArgs e)
-        {
-            await Media.Seek(TimeSpan.FromSeconds(e.Position));
-        }
-
-        private async void MediaPlayer_MainSeekChangeRequested(object sender, SeekEventArgs e) // really bad code, not going to do things like this for the rewrite
-        {
-            await Media.Seek(TimeSpan.FromSeconds(e.Position));
-            if (e.isPlaying)
-                await Media.Play();
-        }
-        */
-
         private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
         {
             Focus();
-        }
-
-        private async void MyVideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            await MyVideoPlayer.Open(
-                new Uri(@"C:\Users\Nevin\Desktop\20210803_230743.mp4"));
-            await MyVideoPlayer.Play();
-        }
-
-        private void MinThumb_OnDragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            MessageBox.Show("ok");
         }
     }
 }

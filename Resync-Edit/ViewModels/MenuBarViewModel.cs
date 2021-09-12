@@ -85,6 +85,7 @@ namespace Resync_Edit.ViewModels
             var toast = new ToastNotification(toastXml);
             toast.Activated += ToastOnActivated;
 
+            _eventAggregator.GetEvent<VideoPlayEvent>().Publish(false);
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
             await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
                     .UsingMultithreading(true)
