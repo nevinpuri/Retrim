@@ -18,19 +18,23 @@
             <Label>
                 <TextBlock FontSize="20" TextDecorations="Underline">Updates</TextBlock>
             </Label>
-            <CheckBox Margin="0, 10, 0, 5" Content="Check for Updates"></CheckBox>
+            <CheckBox Margin="0, 10, 0, 5" Content="Check for Updates" IsChecked="{Binding CheckForUpdates}"></CheckBox>
             <WrapPanel Margin="0, 0, 0, 5">
                 <Label VerticalAlignment="Center" Content="Update Server: " Margin="0, 0, 5, 0"></Label>
                 <WrapPanel>
-                    <TextBox Width="275"></TextBox>
-                    <Button Content="Reset To Default" Margin="10, 0, 0, 0"></Button>
+                    <TextBox Width="275" Text="{Binding UpdateServer}"></TextBox>
+                    <Button Command="{Binding ResetServerCommand}" Content="Reset To Default" Margin="10, 0, 0, 0"></Button>
                 </WrapPanel>
             </WrapPanel>
 
             <Label Margin="0, 20, 0, 10">
                 <TextBlock FontSize="20" TextDecorations="Underline">Video Settings</TextBlock>
             </Label>
-            <CheckBox Content="Encode Videos (May Take Longer to Save)"></CheckBox>
+            <CheckBox Content="Encode Videos (May Take Longer to Save)" IsChecked="{Binding EncodeVideos}"></CheckBox>
         </StackPanel>
+        <WrapPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Command="{Binding CancelChangesCommand}" Content="Cancel" Margin="0, 0, 5, 0"></Button>
+            <Button Command="{Binding ApplyChangesCommand}" Content="Save" Margin="5, 0, 0, 0"></Button>
+        </WrapPanel>
     </Grid>
 </UserControl>
