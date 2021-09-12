@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using Resync_Edit.Events;
 
 namespace Resync_Edit.ViewModels
@@ -20,6 +22,8 @@ namespace Resync_Edit.ViewModels
     {
 
         private string _currentlyLoadedVideo;
+
+        private string _currentVideoName;
 
         private double _minThumb = Double.NaN;
 
@@ -56,15 +60,22 @@ namespace Resync_Edit.ViewModels
 
         private async void SaveCopy_Execute()
         {
-            MessageBox.Show(CurrentlyLoadedVideo);
             if (CurrentlyLoadedVideo is null || Double.IsNaN(MinThumb) || Double.IsNaN(MaxThumb)) return;
             SaveFileDialog fileSave = new SaveFileDialog
             {
-                Title = "Select Location to Save Copy"
+                Title = "Select Location to Save Copy",
+                FileName = $"TRIM - {Path.GetFileName(_currentVideoName)}"
             };
-            fileSave.ShowDialog();
+            if (fileSave.ShowDialog() == false)
+            {
+                return;
+            }
 
-            if (fileSave.FileName == "") return;
+            if (fileSave.FileName == "")
+            {
+                return;
+            }
+
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
             await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
                     .UsingMultithreading(true)
@@ -85,8 +96,8 @@ namespace Resync_Edit.ViewModels
             _eventAggregator = eventAggregator;
             eventAggregator.GetEvent<VideoPlayerEvent>().Subscribe(s =>
             {
-                MessageBox.Show(s);
                 CurrentlyLoadedVideo = s;
+                _currentVideoName = Path.GetFileName(CurrentlyLoadedVideo);
             });
             eventAggregator.GetEvent<ThumbChangeEvent>().Subscribe(args =>
             {
