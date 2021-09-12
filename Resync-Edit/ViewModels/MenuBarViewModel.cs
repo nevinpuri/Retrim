@@ -128,6 +128,7 @@ namespace Resync_Edit.ViewModels
         private void PreviousNavigate_Execute()
         {
             _regionManager.RequestNavigate("ContentRegion", "MainMenu");
+            _regionManager.RequestNavigate("MenuRegion", "MainMenu"); // hacky but it works
         //_regionManager.Deactivate("MenuBar");
         }
     }
