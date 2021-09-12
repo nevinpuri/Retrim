@@ -18,6 +18,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using Resync_Edit.Events;
 using Windows.UI.Notifications;
+using ModernWpf.Controls;
 
 namespace Resync_Edit.ViewModels
 {
@@ -56,6 +57,29 @@ namespace Resync_Edit.ViewModels
 
         private DelegateCommand _previousNavigate;
         public DelegateCommand PreviousNavigate => _previousNavigate ??= new DelegateCommand(PreviousNavigate_Execute);
+
+        private DelegateCommand _settingsCommand;
+
+        public DelegateCommand SettingsCommand => _settingsCommand ??= new DelegateCommand(SettingsCommand_Execute);
+
+        private DelegateCommand _aboutCommand;
+
+        public DelegateCommand AboutCommand => _aboutCommand ??= new DelegateCommand(AboutCommand_Execute);
+
+        private async void AboutCommand_Execute()
+        {
+            ContentDialog contentDialog = new ContentDialog();
+            contentDialog.Title = "About";
+            contentDialog.PrimaryButtonText = "OK";
+            contentDialog.DefaultButton = ContentDialogButton.Primary;
+            contentDialog.Content = "Resync-Edit - a FOSS Video Editing Tool\n\nhttps://github.com/Nevin1901/Resync-Edit";
+            await contentDialog.ShowAsync();
+        }
+
+        private void SettingsCommand_Execute()
+        {
+            _regionManager.RequestNavigate("ContentRegion", "Settings");
+        }
 
         private DelegateCommand _saveCopyCommand;
 

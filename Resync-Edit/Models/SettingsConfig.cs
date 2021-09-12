@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Resync_Edit.Models
 {
-    public class Settings
+    public class SettingsConfig
     {
         public bool CheckForUpdates { get; set; }
 

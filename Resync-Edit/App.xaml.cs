@@ -41,10 +41,10 @@ namespace Resync_Edit
 
             if (!File.Exists(Path.Join(currentDir, "config.json")))
             {
-                File.WriteAllText(Path.Join(currentDir, "config.json"), @"{'CheckForUpdates': true, 'UpdateServer': 'https://nevin.cc/resync/update', 'CompressVideos': false}");
+                File.WriteAllText(Path.Join(currentDir, "config.json"), "{\"CheckForUpdates\": true, \"UpdateServer\": \"https://nevin.cc/resync/update\", \"CompressVideos\": false}");
             }
 
-            var settings = JsonConvert.DeserializeObject<Settings>(Path.Join(currentDir, "config.json"));
+            var settings = JsonConvert.DeserializeObject<SettingsConfig>(File.ReadAllText(Path.Join(currentDir, "config.json")));
             if (settings is null)
             {
                 File.Delete(Path.Join(currentDir, "config.json"));
@@ -60,6 +60,7 @@ namespace Resync_Edit
         {
             containerRegistry.RegisterForNavigation<MainMenu>();
             containerRegistry.RegisterForNavigation<VideoPlayer>();
+            containerRegistry.RegisterForNavigation<Settings>();
             containerRegistry.RegisterForNavigation<MenuBar>();
         }
 
