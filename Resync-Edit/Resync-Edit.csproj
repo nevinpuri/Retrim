@@ -8,6 +8,10 @@
     <ApplicationIcon>Frame-10.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
   <ItemGroup>
 	<Content Include="ffmpeg\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

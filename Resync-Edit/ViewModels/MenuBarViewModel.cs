@@ -79,6 +79,11 @@ namespace Resync_Edit.ViewModels
                 return;
             }
 
+            var xml = "<?xml version=\"1.0\"?><toast><visual><binding template=\"ToastText01\"><text id=\"1\">Your Video Has Finished Exporting</text></binding></visual></toast>";
+            var toastXml = new XmlDocument();
+            toastXml.LoadXml(xml);
+            var toast = new ToastNotification(toastXml);
+            toast.Activated += ToastOnActivated;
 
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
             await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
@@ -91,11 +96,6 @@ namespace Resync_Edit.ViewModels
                 .ProcessAsynchronously();
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(false);
 
-            var xml = $"<?xml version=\"1.0\"?><toast><visual><binding template=\"ToastText01\"><text id=\"1\">Your Video Has Finished Exporting/text></binding></visual></toast>";
-            var toastXml = new XmlDocument();
-            toastXml.LoadXml(xml);
-            var toast = new ToastNotification(toastXml);
-            toast.Activated += ToastOnActivated;
             ToastNotificationManager.CreateToastNotifier("Resync").Show(toast);
         }
 
