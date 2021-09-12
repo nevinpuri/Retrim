@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Resync_Edit.Models;
 
 namespace Resync_Edit
@@ -14,5 +17,13 @@ namespace Resync_Edit
         public static string UpdateServer { get; set; }
 
         public static bool CompressVideos { get; set; }
+
+        public static SettingsConfig GetConfig()
+        {
+
+            string configFile = File.ReadAllText(Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                "config.json"));
+            return JsonConvert.DeserializeObject<SettingsConfig>(configFile);
+        }
     }
 }

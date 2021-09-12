@@ -19,6 +19,7 @@ using Prism.Services.Dialogs;
 using Resync_Edit.Events;
 using Windows.UI.Notifications;
 using ModernWpf.Controls;
+using Resync_Edit.Models;
 
 namespace Resync_Edit.ViewModels
 {
@@ -111,14 +112,29 @@ namespace Resync_Edit.ViewModels
 
             _eventAggregator.GetEvent<VideoPlayEvent>().Publish(false);
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
-            await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
-                    .UsingMultithreading(true)
-                    .Seek(TimeSpan.FromSeconds(MinThumb))
-                    .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
-                .OutputToFile(fileSave.FileName, true, options => options
-                    .WithCustomArgument("-c copy")
-                    .WithFastStart())
-                .ProcessAsynchronously();
+
+            if (Config.GetConfig().CompressVideos)
+            {
+                await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
+                        .UsingMultithreading(true)
+                        .Seek(TimeSpan.FromSeconds(MinThumb))
+                        .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
+                    .OutputToFile(fileSave.FileName, true, options => options
+                        .WithFastStart())
+                    .ProcessAsynchronously();
+            }
+            else
+            {
+                await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
+                        .UsingMultithreading(true)
+                        .Seek(TimeSpan.FromSeconds(MinThumb))
+                        .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
+                    .OutputToFile(fileSave.FileName, true, options => options
+                        .WithCustomArgument("-c copy")
+                        .WithFastStart())
+                    .ProcessAsynchronously();
+            }
+
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(false);
 
             ToastNotificationManager.CreateToastNotifier("Resync").Show(toast);
