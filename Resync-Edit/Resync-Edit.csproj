@@ -12,6 +12,7 @@
 	<Content Include="ffmpeg\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+      <Reference Include="Windows" />
 	<PackageReference Include="FFME.Windows" Version="4.4.350" />
     <PackageReference Include="FFMpegCore" Version="4.5.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.0.2" />

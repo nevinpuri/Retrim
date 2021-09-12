@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.Data.Xml.Dom;
 using ABI.Windows.Devices.Bluetooth.Background;
 using FFMpegCore;
 using Microsoft.Toolkit.Uwp.Notifications;
@@ -15,6 +17,7 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Resync_Edit.Events;
+using Windows.UI.Notifications;
 
 namespace Resync_Edit.ViewModels
 {
@@ -76,6 +79,7 @@ namespace Resync_Edit.ViewModels
                 return;
             }
 
+
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
             await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
                     .UsingMultithreading(true)
@@ -86,8 +90,19 @@ namespace Resync_Edit.ViewModels
                     .WithFastStart())
                 .ProcessAsynchronously();
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(false);
-            new ToastContentBuilder().AddText("Your video has finished exporting!").Show();
-            MessageBox.Show("done");
+
+            var xml = $"<?xml version=\"1.0\"?><toast><visual><binding template=\"ToastText01\"><text id=\"1\">Your Video Has Finished Exporting/text></binding></visual></toast>";
+            var toastXml = new XmlDocument();
+            toastXml.LoadXml(xml);
+            var toast = new ToastNotification(toastXml);
+            toast.Activated += ToastOnActivated;
+            ToastNotificationManager.CreateToastNotifier("Resync").Show(toast);
+        }
+
+        private void ToastOnActivated(ToastNotification sender, object args)
+        {
+            Process.Start("explorer.exe", $"{Path.GetDirectoryName(CurrentlyLoadedVideo)}");
+            // make sure there's an event unsubscribe
         }
 
         public MenuBarViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
@@ -104,6 +119,10 @@ namespace Resync_Edit.ViewModels
                 MinThumb = args.MinThumb;
                 MaxThumb = args.MaxThumb;
             });
+        }
+
+        ~MenuBarViewModel()
+        {
         }
 
         private void PreviousNavigate_Execute()
