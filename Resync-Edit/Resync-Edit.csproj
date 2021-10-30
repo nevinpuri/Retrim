@@ -35,4 +35,8 @@
     <Folder Include="Interfaces\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SyncServiceLibrary\SyncServiceLibrary.csproj" />
+  </ItemGroup>
+
 </Project>

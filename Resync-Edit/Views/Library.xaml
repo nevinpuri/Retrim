@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="Resync_Edit.Views.Library"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:Resync_Edit.Views"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    mc:Ignorable="d" d:DesignWidth="910" d:DesignHeight="450"
+    >
+    <UserControl.Resources>
+        <controls:BooleanToVisibilityConverter x:Key="BoolToVisConverter"></controls:BooleanToVisibilityConverter>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="8*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="8*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="1" x:Name="ScrollBarPositionLabel" Content="{Binding Hi}" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
+        <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Upload" Padding="15, 10" Command="{Binding CommandLoad}"></Button>
+
+        <ListBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Images}" x:Name="ImagesBox" SelectedItem="{Binding SelectedFile}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <prism:InvokeCommandAction Command="{Binding VideoClick}"></prism:InvokeCommandAction>
+                </i:EventTrigger>
+                <i:EventTrigger EventName="KeyDown">
+                    <prism:InvokeCommandAction Command="{Binding VideoEnter}"></prism:InvokeCommandAction>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical" Margin="0">
+                        <Image Width="200" Height="100">
+                            <Image.Source>
+                                <BitmapImage DecodePixelWidth="200" DecodePixelHeight="100" UriSource="{Binding ThumbnailLocation}"/></Image.Source>
+                        </Image>
+                        <Label MaxWidth="200px">
+                            <TextBlock TextTrimming="CharacterEllipsis" Margin="0, 5, 0, 0" Foreground="WhiteSmoke" Text="{Binding Title}"></TextBlock>
+                        </Label>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel>
+                    </WrapPanel>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+        <StackPanel x:Name="LoadingPanel" Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource BoolToVisConverter}}">
+            <ui:ProgressRing Width="40" Height="40" Grid.Row="0" Grid.Column="0" IsActive="True"></ui:ProgressRing>
+            <Label Content="Loading" HorizontalAlignment="Center" Margin="0, 10, 0, 0" FontWeight="SemiBold" Foreground="#4b4947" FontSize="18"></Label>
+        </StackPanel>
+    </Grid>
+</UserControl>

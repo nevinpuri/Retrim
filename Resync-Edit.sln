@@ -5,16 +5,34 @@ VisualStudioVersion = 16.0.31402.337
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resync-Edit", "Resync-Edit\Resync-Edit.csproj", "{5B2A69D8-F857-4ED8-B60D-5D22151FE284}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{227F23E9-4926-4197-9084-714AED25C8EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyncServiceLibrary", "SyncServiceLibrary\SyncServiceLibrary.csproj", "{C7100731-52BA-4FA0-98B4-9AEA51A99556}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Debug|x64.Build.0 = Debug|Any CPU
 		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Release|x64.ActiveCfg = Release|Any CPU
+		{5B2A69D8-F857-4ED8-B60D-5D22151FE284}.Release|x64.Build.0 = Release|Any CPU
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Debug|x64.ActiveCfg = Debug|x64
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Debug|x64.Build.0 = Debug|x64
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Release|x64.ActiveCfg = Release|x64
+		{C7100731-52BA-4FA0-98B4-9AEA51A99556}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

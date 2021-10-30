@@ -30,7 +30,7 @@ namespace Resync_Edit.ViewModels
             string[] commandLineArgs = Environment.GetCommandLineArgs(); // [a-zA-Z]:[\\\/](?:[a-zA-Z0-9]+[\\\/])*([a-zA-Z0-9]+.*)
             commandLineArgs = commandLineArgs.Skip(1).ToArray(); // to only get videos
             if (commandLineArgs.Length < 1)
-                _regionManager.RequestNavigate("ContentRegion", "MainMenu");
+                _regionManager.RequestNavigate("ContentRegion", "Library");
             else
             {
                 var navigationParameters = new NavigationParameters();
