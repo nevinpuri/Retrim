@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,6 +82,7 @@ namespace Resync_Edit.ViewModels
 
         private async void CommandLoadExecute()
         {
+            var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             int syncCount = await _syncService.QueryAllVideos(); // maybe add a timer which blocks navigating on a setinterval type thing
             List<VideoFile>
                 clips = await _syncService.GetAllUserClips(); // add a check to see if the clips have a thumbnail
@@ -90,16 +92,18 @@ namespace Resync_Edit.ViewModels
                 if (!File.Exists(clip.ThumbnailLocation))
                 {
                     clip.ThumbnailLocation =
-                        "C:/Users/Nevin/Desktop/IMG_20210116_171559.jpg"; // add a right click context menu which sais "open file location" to file
+                        Path.Join(currentDir, "placeholder.jpg"); // add a right click context menu which sais "open file location" to file
                 }
             }
 
+            /*
             Unosquare.FFME.Library.FFmpegDirectory = @"C:\Users\Nevin\Desktop\resync\bin\ffmpeg\x64\bin"; // make sure to add a check for 32 bit or 64 bit, and set the library according to that
             bool done = Unosquare.FFME.Library.LoadFFmpeg();
             if (!done)
             {
                 MessageBox.Show("Error Loading FFMPEG");
             }
+            */
             Images = new ObservableCollection<VideoFile>(clips);
             Loading = false;
             Hi = "new epic";
@@ -149,9 +153,9 @@ namespace Resync_Edit.ViewModels
             if (SelectedFile != null)
             {
                 var navigationParameters = new NavigationParameters();
-                navigationParameters.Add("Title", SelectedFile.Title);
-                navigationParameters.Add("VideoLocation", SelectedFile.VideoLocation);
+                navigationParameters.Add("UserVideos", SelectedFile.VideoLocation);
                 _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
+                _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
         }
 

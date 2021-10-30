@@ -160,6 +160,7 @@ namespace Resync_Edit.ViewModels
                 MinThumb = args.MinThumb;
                 MaxThumb = args.MaxThumb;
             });
+            _regionManager.Regions["MenuRegion"].Add("MenuBar");
         }
 
         ~MenuBarViewModel()
@@ -168,9 +169,11 @@ namespace Resync_Edit.ViewModels
 
         private void PreviousNavigate_Execute()
         {
-            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
-            _regionManager.RequestNavigate("MenuRegion", "MainMenu"); // hacky but it works
-        //_regionManager.Deactivate("MenuBar");
-        }
+            _regionManager.RequestNavigate("ContentRegion", "Library");
+            // _regionManager.RequestNavigate("MenuRegion", "MainMenu"); // hacky but it works
+            var menuView = _regionManager.Regions["MenuRegion"].GetView("MenuBar");
+            _regionManager.Regions["MenuRegion"].Remove(menuView);
+            //_regionManager.Deactivate("MenuBar");
+        } // make a previous navigate event call which makes the other one manually add and remove the view
     }
 }
