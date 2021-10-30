@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Resync_Edit.Models
+namespace SyncServiceLibrary.Models
 {
-    public class SettingsConfig
+    public class SettingConfig
     {
         public bool CheckForUpdates { get; set; }
 
@@ -15,5 +15,7 @@ namespace Resync_Edit.Models
         public bool CompressVideos { get; set; }
 
         public string FolderLocation { get; set; }
+
+        public string ThumbnailLocation { get; set; }
     }
 }

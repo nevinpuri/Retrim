@@ -17,7 +17,8 @@ namespace SyncServiceLibrary
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=C:\\Users\\Nevin\\Desktop\\resync\\resyncDbContext.sqlite");
+            UserConfigHelper configHelper = new UserConfigHelper();
+            optionsBuilder.UseSqlite($"Data Source={configHelper.GetDbPath()}");
             base.OnConfiguring(optionsBuilder);
         }
     }

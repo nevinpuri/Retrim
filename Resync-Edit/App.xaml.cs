@@ -27,8 +27,8 @@ namespace Resync_Edit
     {
         public App()
         {
-            if (!Directory.Exists(Path.Join(Path.GetTempPath(), "Resync-Temp")))
-                Directory.CreateDirectory(Path.Join(Path.GetTempPath(), "Resync-Temp"));
+            UserConfigHelper configHelper = new UserConfigHelper();
+            if (!configHelper.CheckUserConfig()) configHelper.CreateUserConfig();
 
             var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -39,15 +39,15 @@ namespace Resync_Edit
             {
                 BinaryFolder = 
                 Path.Join(currentDir, @"ffmpeg\bin"),
-                TemporaryFilesFolder = Path.Join(Path.GetTempPath(), "Resync-Temp")
+                TemporaryFilesFolder = Path.Join(configHelper.GetTempPath())
             });
 
-            if (!File.Exists(Path.Join(currentDir, "config.json")))
+            if (!File.Exists(configHelper.GetConfigLocation()))
             {
-                File.WriteAllText(Path.Join(currentDir, "config.json"), "{\"CheckForUpdates\": true, \"UpdateServer\": \"https://nevin.cc/resync/update\", \"CompressVideos\": false}");
+                configHelper.CreateUserConfig();
             }
 
-            var settings = JsonConvert.DeserializeObject<SettingsConfig>(File.ReadAllText(Path.Join(currentDir, "config.json")));
+            var settings = JsonConvert.DeserializeObject<SettingsConfig>(File.ReadAllText(configHelper.GetConfigLocation()));
             if (settings is null)
             {
                 File.Delete(Path.Join(currentDir, "config.json"));
@@ -61,10 +61,11 @@ namespace Resync_Edit
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            UserConfigHelper configHelper = new UserConfigHelper();
             containerRegistry.Register<ISyncService, SyncService>();
             containerRegistry.Register<IUserConfigHelper, UserConfigHelper>();
             var optionsBuilder = new DbContextOptionsBuilder<ClipContext>();
-            optionsBuilder.UseSqlite("Data Source=C:\\Users\\Nevin\\Desktop\\resync\\resyncDbContext.sqlite");
+            optionsBuilder.UseSqlite($"Data Source={configHelper.GetDbPath()}");
             containerRegistry.RegisterInstance(optionsBuilder.Options);
             containerRegistry.RegisterForNavigation<Library>();
             containerRegistry.RegisterForNavigation<MainMenu>();

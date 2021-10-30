@@ -26,6 +26,8 @@ namespace Resync_Edit.ViewModels
 
         private IRegionManager _regionManager;
 
+        private IUserConfigHelper _configHelper;
+
         private VideoFile _selectedFile = null;
 
         public VideoFile SelectedFile
@@ -38,13 +40,14 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand<System.Windows.Input.KeyEventArgs> VideoEnter { get; set; }
 
-        public LibraryViewModel(ISyncService syncService, IRegionManager regionManager)
+
+        public LibraryViewModel(ISyncService syncService, IRegionManager regionManager, IUserConfigHelper configHelper)
         {
             _regionManager = regionManager;
             _syncService = syncService;
             VideoClick = new DelegateCommand(VideoClickExecute);
             VideoEnter = new DelegateCommand<System.Windows.Input.KeyEventArgs>(VideoEnterExecute);
-            MessageBox.Show("ok");
+            _configHelper = configHelper;
         }
 
         private ObservableCollection<VideoFile> _images;

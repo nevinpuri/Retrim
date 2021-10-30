@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using FFMpegCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -28,8 +27,6 @@ namespace SyncServiceLibrary
         {
             _clipContext = clipContext;
             _configHelper = configHelper;
-            GlobalFFOptions.Configure(options =>
-                options.BinaryFolder = "C:\\Users\\Nevin\\Desktop\\resync\\bin\\ffmpeg\\x64");
         }
 
         public async Task<int> QueryAllVideos()
@@ -62,8 +59,10 @@ namespace SyncServiceLibrary
         public int GenerateAllThumbnails() // todo, make a selective thubmnail generation function so it doesn't have to go through everything to generate all of the thumbnails
         { // we need to have the thumbnail generation be a function in the wpf app, since I need to call StorageFile.GetThumbnailAsync(), something which I can only call when the wpf application is packaged as an msix package
             int totalGeneratedThumbnails = 0;
+            /*
             if (!Directory.Exists("C:\\Users\\Nevin\\Desktop\\resync\\thumbnails"))
                 Directory.CreateDirectory("C:\\Users\\Nevin\\Desktop\\resync\\thumbnails"); // todo: make this get from the config
+            */
             foreach (var videoFile in _clipContext.VideoFiles.ToList())
             {
                 if (!File.Exists(videoFile.ThumbnailLocation))
