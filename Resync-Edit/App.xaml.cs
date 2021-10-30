@@ -8,11 +8,14 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using FFMpegCore;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Prism.Ioc;
 using Prism.Unity;
 using Resync_Edit.Models;
 using Resync_Edit.Views;
+using SyncServiceLibrary;
+using SyncServiceLibrary.Interfaces;
 using Unity;
 
 namespace Resync_Edit
@@ -58,11 +61,16 @@ namespace Resync_Edit
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.Register<ISyncService, SyncService>();
+            containerRegistry.Register<IUserConfigHelper, UserConfigHelper>();
+            var optionsBuilder = new DbContextOptionsBuilder<ClipContext>();
+            optionsBuilder.UseSqlite("Data Source=C:\\Users\\Nevin\\Desktop\\resync\\resyncDbContext.sqlite");
+            containerRegistry.RegisterInstance(optionsBuilder.Options);
+            containerRegistry.RegisterForNavigation<Library>();
             containerRegistry.RegisterForNavigation<MainMenu>();
             containerRegistry.RegisterForNavigation<VideoPlayer>();
             containerRegistry.RegisterForNavigation<Settings>();
             containerRegistry.RegisterForNavigation<MenuBar>();
-            containerRegistry.RegisterForNavigation<Library>();
         }
 
         protected override Window CreateShell()

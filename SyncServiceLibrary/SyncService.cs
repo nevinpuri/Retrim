@@ -11,8 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAPICodePack.Shell;
-using ResyncService.Interfaces;
-using ResyncService.Models;
+using SyncServiceLibrary.Models;
 using SyncServiceLibrary.Interfaces;
 
 namespace SyncServiceLibrary

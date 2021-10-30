@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ResyncService.Models;
+using SyncServiceLibrary.Models;
 
-namespace ResyncService.Interfaces
+namespace SyncServiceLibrary.Interfaces
 {
     public interface IUserConfigHelper
     {
