@@ -9,8 +9,10 @@ using System.Windows;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Resync_Edit.Events;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
@@ -21,13 +23,16 @@ namespace Resync_Edit.ViewModels
 
         private IRegionManager _regionManager;
 
+        private IEventAggregator _eventAggregator;
+
         private DelegateCommand _fileSelect;
 
         public DelegateCommand FileSelect => _fileSelect ??= new DelegateCommand(FileSelect_Execute);
 
-        public MainMenuViewModel(IRegionManager regionManager)
+        public MainMenuViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
+            _eventAggregator = eventAggregator;
         }
 
         private void FileSelect_Execute()
@@ -44,7 +49,8 @@ namespace Resync_Edit.ViewModels
                     { "UserVideos", fileDialog.FileName }
                 };
                 _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
-                _regionManager.RequestNavigate("MenuRegion", "MenuBar");
+                _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = true});
+                // _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
         }
 

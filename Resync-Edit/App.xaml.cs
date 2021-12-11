@@ -71,7 +71,7 @@ namespace Resync_Edit
             containerRegistry.RegisterForNavigation<MainMenu>();
             containerRegistry.RegisterForNavigation<VideoPlayer>();
             containerRegistry.RegisterForNavigation<Settings>();
-            containerRegistry.RegisterForNavigation<MenuBar>();
+            // containerRegistry.RegisterForNavigation<MenuBar>();
         }
 
         protected override Window CreateShell()

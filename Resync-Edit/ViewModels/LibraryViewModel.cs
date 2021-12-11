@@ -9,10 +9,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Resync_Edit.Events;
 using SyncServiceLibrary;
 using SyncServiceLibrary.Interfaces;
+using WinRT.Interop;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
 using MessageBox = System.Windows.MessageBox;
 
@@ -22,6 +25,8 @@ namespace Resync_Edit.ViewModels
     {
 
         private ISyncService _syncService;
+
+        private IEventAggregator _eventAggregator;
 
         private Task getVideosTask;
 
@@ -42,10 +47,11 @@ namespace Resync_Edit.ViewModels
         public DelegateCommand<System.Windows.Input.KeyEventArgs> VideoEnter { get; set; }
 
 
-        public LibraryViewModel(ISyncService syncService, IRegionManager regionManager, IUserConfigHelper configHelper)
+        public LibraryViewModel(ISyncService syncService, IRegionManager regionManager, IUserConfigHelper configHelper, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
             _syncService = syncService;
+            _eventAggregator = eventAggregator;
             VideoClick = new DelegateCommand(VideoClickExecute);
             VideoEnter = new DelegateCommand<System.Windows.Input.KeyEventArgs>(VideoEnterExecute);
             _configHelper = configHelper;
@@ -155,7 +161,8 @@ namespace Resync_Edit.ViewModels
                 var navigationParameters = new NavigationParameters();
                 navigationParameters.Add("UserVideos", SelectedFile.VideoLocation);
                 _regionManager.RequestNavigate("ContentRegion", new Uri("VideoPlayer" + navigationParameters.ToString(), UriKind.Relative));
-                _regionManager.RequestNavigate("MenuRegion", "MenuBar");
+                _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = true});
+                // _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
         }
 

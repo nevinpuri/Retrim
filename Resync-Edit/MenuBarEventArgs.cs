@@ -2,6 +2,6 @@
 {
     public class MenuBarEventArgs
     {
-        
+        public bool Open { get; set; }
     }
 }
