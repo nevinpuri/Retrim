@@ -55,6 +55,7 @@ namespace Resync_Edit.ViewModels
             VideoClick = new DelegateCommand(VideoClickExecute);
             VideoEnter = new DelegateCommand<System.Windows.Input.KeyEventArgs>(VideoEnterExecute);
             _configHelper = configHelper;
+            _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});
         }
 
         private ObservableCollection<VideoFile> _images;

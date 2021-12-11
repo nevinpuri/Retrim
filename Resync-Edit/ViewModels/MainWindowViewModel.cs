@@ -46,6 +46,7 @@ namespace Resync_Edit.ViewModels
             else
             {
                 var menuBar = _regionManager.Regions["MenuRegion"].Views;
+                if (!menuBar.Any()) return;
                 _regionManager.Regions["MenuRegion"].Remove(menuBar.First()); // this is so hacky
             }
         }

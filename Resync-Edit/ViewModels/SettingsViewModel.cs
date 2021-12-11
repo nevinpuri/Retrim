@@ -7,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Resync_Edit.Events;
 using Resync_Edit.Models;
 
 namespace Resync_Edit.ViewModels
@@ -17,6 +19,8 @@ namespace Resync_Edit.ViewModels
     {
 
         private IRegionManager _regionManager;
+
+        private IEventAggregator _eventAggregator;
 
         private bool _checkForUpdates = Config.CheckForUpdates;
 
@@ -59,8 +63,9 @@ namespace Resync_Edit.ViewModels
 
         private void CancelChangesCommand_Execute()
         {
-            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
-            _regionManager.RequestNavigate("MenuRegion", "MainMenu");
+            _regionManager.RequestNavigate("ContentRegion", "Library");
+            // _regionManager.RequestNavigate("MenuRegion", "MainMenu");
+            _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});
         }
 
         private void ApplyChanges_Execute()
@@ -71,8 +76,9 @@ namespace Resync_Edit.ViewModels
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             File.WriteAllText(Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.json"), JsonConvert.SerializeObject(settingsConfig));
 
-            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
-            _regionManager.RequestNavigate("MenuRegion", "MainMenu");
+            _regionManager.RequestNavigate("ContentRegion", "Library");
+            // _regionManager.RequestNavigate("MenuRegion", "MainMenu");
+            _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});
         }
 
         private void ResetServer_Execute()
@@ -80,9 +86,10 @@ namespace Resync_Edit.ViewModels
             UpdateServer = "https://nevin.cc/resync/update";
         }
 
-        public SettingsViewModel(IRegionManager regionManager)
+        public SettingsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
         {
             _regionManager = regionManager;
+            _eventAggregator = eventAggregator;
         }
     }
 }

@@ -33,6 +33,7 @@ namespace Resync_Edit.ViewModels
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});
         }
 
         private void FileSelect_Execute()
