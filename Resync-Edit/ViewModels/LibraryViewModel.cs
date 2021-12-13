@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Prism.Commands;
 using Prism.Events;
@@ -40,6 +41,14 @@ namespace Resync_Edit.ViewModels
         {
             get => _selectedFile;
             set => SetProperty<VideoFile>(ref _selectedFile, value);
+        }
+
+        private ItemCollection _userFilter;
+
+        public ItemCollection UserFilter
+        {
+            get => _userFilter;
+            set => SetProperty(ref _userFilter, value);
         }
 
         public DelegateCommand VideoClick { get; set; }
@@ -113,6 +122,8 @@ namespace Resync_Edit.ViewModels
             */
             Images = new ObservableCollection<VideoFile>(clips);
             Loading = false;
+            var allGames = await _syncService.GetAllGames();
+            MessageBox.Show(allGames[0]);
             Hi = "new epic";
         }
 

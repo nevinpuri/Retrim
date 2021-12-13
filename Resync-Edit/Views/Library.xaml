@@ -16,14 +16,18 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="8*"></RowDefinition>
-            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="9*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-            <ListBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" ItemsSource="{Binding Images}" x:Name="ImagesBox" SelectedItem="{Binding SelectedFile}">
-            <i:Interaction.Triggers>
+        <WrapPanel Grid.Row="0" HorizontalAlignment="Right" Margin="10, 10">
+            <controls:TextBox Width="205"></controls:TextBox>
+            <controls:Button Content="Search" Margin="10, 0, 0, 0"></controls:Button>
+        </WrapPanel>
+            <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Images}" x:Name="ImagesBox" SelectedItem="{Binding SelectedFile}">
+                <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <prism:InvokeCommandAction Command="{Binding VideoClick}"></prism:InvokeCommandAction>
                 </i:EventTrigger>
@@ -52,7 +56,7 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-        <StackPanel x:Name="LoadingPanel" Grid.Row="0" Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource BoolToVisConverter}}" ZIndex="99">
+        <StackPanel x:Name="LoadingPanel" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Orientation="Vertical" VerticalAlignment="Center" Visibility="{Binding Loading, Converter={StaticResource BoolToVisConverter}}" ZIndex="99">
             <ui:ProgressRing Width="40" Height="40" Grid.Row="0" Grid.Column="0" IsActive="True"></ui:ProgressRing>
             <Label Content="Loading" HorizontalAlignment="Center" Margin="0, 10, 0, 0" FontWeight="SemiBold" Foreground="#4b4947" FontSize="18"></Label>
         </StackPanel>

@@ -83,5 +83,10 @@ namespace SyncServiceLibrary
             var allUserClips = await _clipContext.VideoFiles.ToListAsync();
             return allUserClips;
         }
+
+        public async Task<List<string>> GetAllGames()
+        {
+            return await _clipContext.VideoFiles.Select(m => m.Game).Distinct().ToListAsync();
+        }
     }
 }

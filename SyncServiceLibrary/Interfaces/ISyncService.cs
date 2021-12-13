@@ -12,5 +12,7 @@ namespace SyncServiceLibrary.Interfaces
         public Task<List<VideoFile>> GetAllUserClips();
 
         public int GenerateAllThumbnails();
+
+        public Task<List<string>> GetAllGames();
     }
 }
