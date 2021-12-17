@@ -16,6 +16,7 @@
 	<Content Include="ffmpeg\**">
 		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	</Content>
+	<None Remove="Frame-10.png" />
       <Reference Include="Windows" />
 	<PackageReference Include="FFME.Windows" Version="4.4.350" />
     <PackageReference Include="FFMpegCore" Version="4.5.0" />
@@ -26,9 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Frame-10.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="placeholder.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -43,6 +41,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SyncServiceLibrary\SyncServiceLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Frame-10.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

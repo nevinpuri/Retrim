@@ -78,9 +78,9 @@ namespace SyncServiceLibrary
             return totalGeneratedThumbnails;
         }
 
-        public async Task<List<VideoFile>> GetAllUserClips()
+        public async Task<List<VideoFile>> GetAllUserClips(string filter)
         {
-            var allUserClips = await _clipContext.VideoFiles.ToListAsync();
+            var allUserClips = await _clipContext.VideoFiles.Where(e => e.Title.Contains(filter)).ToListAsync();
             return allUserClips;
         }
 

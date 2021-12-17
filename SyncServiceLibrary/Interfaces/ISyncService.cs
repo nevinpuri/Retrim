@@ -9,7 +9,7 @@ namespace SyncServiceLibrary.Interfaces
     {
         public Task<int> QueryAllVideos();
 
-        public Task<List<VideoFile>> GetAllUserClips();
+        public Task<List<VideoFile>> GetAllUserClips(string filter);
 
         public int GenerateAllThumbnails();
 

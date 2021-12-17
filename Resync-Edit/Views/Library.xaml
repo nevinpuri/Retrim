@@ -22,9 +22,13 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <WrapPanel Grid.Row="0" HorizontalAlignment="Right" Margin="10, 10">
-            <controls:TextBox Width="205"></controls:TextBox>
-            <controls:Button Content="Search" Margin="10, 0, 0, 0"></controls:Button>
+        <WrapPanel Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10, 0">
+            <Image Source="pack://application:,,,/Frame-10.png" Width="30" Height="30" />
+            <Label FontWeight="SemiBold" FontSize="24" VerticalAlignment="Center" Margin="10, 0, 0, 0">Resync Edit</Label>
+        </WrapPanel>
+        <WrapPanel Grid.Row="0" HorizontalAlignment="Right" Margin="10, 10" VerticalAlignment="Center">
+            <controls:TextBox Width="205" Text="{Binding SearchFilter}"></controls:TextBox>
+            <controls:Button Content="Search" Margin="10, 0, 0, 0" IsDefault="True" Command="{Binding SearchCommand}"></controls:Button>
         </WrapPanel>
             <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Images}" x:Name="ImagesBox" SelectedItem="{Binding SelectedFile}">
                 <i:Interaction.Triggers>

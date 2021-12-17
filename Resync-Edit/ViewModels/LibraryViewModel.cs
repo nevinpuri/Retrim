@@ -25,6 +25,14 @@ namespace Resync_Edit.ViewModels
     public class LibraryViewModel : BindableBase, INavigationAware, IConfirmNavigationRequest
     {
 
+        private string _searchFilter;
+
+        public string SearchFilter
+        {
+            get => _searchFilter;
+            set => SetProperty(ref _searchFilter, value);
+        }
+
         private ISyncService _syncService;
 
         private IEventAggregator _eventAggregator;
@@ -36,6 +44,16 @@ namespace Resync_Edit.ViewModels
         private IUserConfigHelper _configHelper;
 
         private VideoFile _selectedFile = null;
+
+        private DelegateCommand _searchCommand;
+
+        public DelegateCommand SearchCommand => _searchCommand ??= new DelegateCommand(SearchCommand_Execute);
+
+        private async void SearchCommand_Execute()
+        {
+            List<VideoFile> clips = await GetAllClips(SearchFilter);
+            Images = new ObservableCollection<VideoFile>(clips);
+        }
 
         public VideoFile SelectedFile
         {
@@ -96,12 +114,12 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand CommandLoad => _commandLoad ??= new DelegateCommand(CommandLoadExecute);
 
-        private async void CommandLoadExecute()
+        private async Task<List<VideoFile>> GetAllClips(string filter)
         {
             var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             int syncCount = await _syncService.QueryAllVideos(); // maybe add a timer which blocks navigating on a setinterval type thing
             List<VideoFile>
-                clips = await _syncService.GetAllUserClips(); // add a check to see if the clips have a thumbnail
+                clips = await _syncService.GetAllUserClips(filter); // add a check to see if the clips have a thumbnail
             _syncService.GenerateAllThumbnails(); // kind of bad code
             foreach (var clip in clips) // maybe using a cancellation token on the async methods can help me fix the bug
             {
@@ -112,6 +130,12 @@ namespace Resync_Edit.ViewModels
                 }
             }
 
+            return clips;
+        }
+
+        private async void CommandLoadExecute()
+        {
+            List<VideoFile> clips = await GetAllClips("");
             /*
             Unosquare.FFME.Library.FFmpegDirectory = @"C:\Users\Nevin\Desktop\resync\bin\ffmpeg\x64\bin"; // make sure to add a check for 32 bit or 64 bit, and set the library according to that
             bool done = Unosquare.FFME.Library.LoadFFmpeg();
@@ -123,7 +147,6 @@ namespace Resync_Edit.ViewModels
             Images = new ObservableCollection<VideoFile>(clips);
             Loading = false;
             var allGames = await _syncService.GetAllGames();
-            MessageBox.Show(allGames[0]);
             Hi = "new epic";
         }
 
