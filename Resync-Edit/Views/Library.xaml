@@ -28,7 +28,7 @@
         </WrapPanel>
         <WrapPanel Grid.Row="0" HorizontalAlignment="Right" Margin="10, 10" VerticalAlignment="Center">
             <controls:TextBox Width="205" Text="{Binding SearchFilter}"></controls:TextBox>
-            <controls:Button Content="Search" Margin="10, 0, 0, 0" IsDefault="True" Command="{Binding SearchCommand}"></controls:Button>
+            <controls:Button Content="Search" Margin="10, 0, 0, 0" Command="{Binding SearchCommand}"></controls:Button>
         </WrapPanel>
             <ListBox Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Images}" x:Name="ImagesBox" SelectedItem="{Binding SelectedFile}">
                 <i:Interaction.Triggers>

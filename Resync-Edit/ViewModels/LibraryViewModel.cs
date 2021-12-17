@@ -51,6 +51,7 @@ namespace Resync_Edit.ViewModels
 
         private async void SearchCommand_Execute()
         {
+            if (SearchFilter == null) SearchFilter = "";
             List<VideoFile> clips = await GetAllClips(SearchFilter);
             Images = new ObservableCollection<VideoFile>(clips);
         }
