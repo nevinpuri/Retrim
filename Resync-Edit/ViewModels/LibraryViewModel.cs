@@ -22,6 +22,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace Resync_Edit.ViewModels
 {
+    // docs.resadable.to/asdgisajdoig
     public class LibraryViewModel : BindableBase, INavigationAware, IConfirmNavigationRequest
     {
 
