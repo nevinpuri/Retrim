@@ -74,7 +74,7 @@ namespace Resync_Edit.ViewModels
             { CheckForUpdates = CheckForUpdates, CompressVideos = EncodeVideos, UpdateServer = UpdateServer };
 
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            File.WriteAllText(Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.json"), JsonConvert.SerializeObject(settingsConfig));
+            File.WriteAllText(Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "userConfig.json"), JsonConvert.SerializeObject(settingsConfig));
 
             _regionManager.RequestNavigate("ContentRegion", "Library");
             // _regionManager.RequestNavigate("MenuRegion", "MainMenu");

@@ -87,9 +87,11 @@ namespace SyncServiceLibrary
             return Path.Join(resyncPath, "userConfig.json");
         }
 
-        public string GetDbPath()
+        public static string GetDbPath()
         {
-            return Path.Join(resyncPath, "resyncDbContext.sqlite");
+
+            string resyncConfig = Path.Join(Path.GetTempPath(), "resync");
+            return Path.Join(resyncConfig, "resyncDbContext.sqlite");
         }
 
     }

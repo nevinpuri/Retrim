@@ -12,7 +12,7 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding FileSelect}" Background="Black"></Button>
         <StackPanel VerticalAlignment="Top" Margin="0, 100">
-            <Image Source="pack://application:,,,/Resync-Edit;component/resources/images/Frame10.png" Width="54" Height="54"/>
+            <Image Source="pack://application:,,,/Frame-10.png" Width="54" Height="54"/>
         </StackPanel>
         <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <ui:SymbolIcon Symbol="OpenFile" Margin="0, 0, 10, 0"></ui:SymbolIcon>

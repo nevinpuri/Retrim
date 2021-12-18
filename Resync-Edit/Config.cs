@@ -22,7 +22,7 @@ namespace Resync_Edit
         {
 
             string configFile = File.ReadAllText(Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "config.json"));
+                "userConfig.json"));
             return JsonConvert.DeserializeObject<SettingsConfig>(configFile);
         }
     }

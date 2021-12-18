@@ -87,6 +87,8 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
 
+        private string _fileName;
+
         private async void SaveCopy_Execute()
         {
             if (CurrentlyLoadedVideo is null || Double.IsNaN(MinThumb) || Double.IsNaN(MaxThumb)) return;
@@ -109,7 +111,11 @@ namespace Resync_Edit.ViewModels
             var toastXml = new XmlDocument();
             toastXml.LoadXml(xml);
             var toast = new ToastNotification(toastXml);
-            toast.Activated += ToastOnActivated;
+            // toast.Activated += ToastOnActivated;
+            toast.Activated += (sender, args) =>
+            {
+                ToastOnActivated(sender, fileSave.FileName);
+            };
 
             _eventAggregator.GetEvent<VideoPlayEvent>().Publish(false);
             _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
@@ -143,7 +149,7 @@ namespace Resync_Edit.ViewModels
 
         private void ToastOnActivated(ToastNotification sender, object args)
         {
-            Process.Start("explorer.exe", $"{Path.GetDirectoryName(CurrentlyLoadedVideo)}");
+            Process.Start("explorer.exe", $"{Path.GetDirectoryName((string)args)}");
             // make sure there's an event unsubscribe
         }
 

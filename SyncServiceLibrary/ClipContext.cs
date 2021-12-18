@@ -17,8 +17,7 @@ namespace SyncServiceLibrary
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            UserConfigHelper configHelper = new UserConfigHelper();
-            optionsBuilder.UseSqlite($"Data Source={configHelper.GetDbPath()}");
+            optionsBuilder.UseSqlite($"Data Source={UserConfigHelper.GetDbPath()}");
             base.OnConfiguring(optionsBuilder);
         }
     }

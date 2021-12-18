@@ -50,7 +50,7 @@ namespace Resync_Edit
             var settings = JsonConvert.DeserializeObject<SettingsConfig>(File.ReadAllText(configHelper.GetConfigLocation()));
             if (settings is null)
             {
-                File.Delete(Path.Join(currentDir, "config.json"));
+                File.Delete(Path.Join(currentDir, "userConfig.json"));
                 MessageBox.Show("Error: Failed to Parse Config File");
                 return;
             }
@@ -61,11 +61,10 @@ namespace Resync_Edit
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            UserConfigHelper configHelper = new UserConfigHelper();
             containerRegistry.Register<ISyncService, SyncService>();
             containerRegistry.Register<IUserConfigHelper, UserConfigHelper>();
             var optionsBuilder = new DbContextOptionsBuilder<ClipContext>();
-            optionsBuilder.UseSqlite($"Data Source={configHelper.GetDbPath()}");
+            optionsBuilder.UseSqlite($"Data Source={UserConfigHelper.GetDbPath()}");
             containerRegistry.RegisterInstance(optionsBuilder.Options);
             containerRegistry.RegisterForNavigation<Library>();
             containerRegistry.RegisterForNavigation<MainMenu>();
