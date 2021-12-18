@@ -12,6 +12,8 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Resync_Edit.Events;
 using Resync_Edit.Models;
+using SyncServiceLibrary;
+using SyncServiceLibrary.Models;
 
 namespace Resync_Edit.ViewModels
 {
@@ -22,7 +24,7 @@ namespace Resync_Edit.ViewModels
 
         private IEventAggregator _eventAggregator;
 
-        private bool _checkForUpdates = Config.CheckForUpdates;
+        private bool _checkForUpdates;
 
         public bool CheckForUpdates
         {
@@ -30,7 +32,7 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _checkForUpdates, value);
         }
 
-        private string _updateServer = Config.UpdateServer;
+        private string _updateServer;
 
         public string UpdateServer
         {
@@ -38,7 +40,7 @@ namespace Resync_Edit.ViewModels
             set => SetProperty(ref _updateServer, value);
         }
 
-        private bool _encodeVideos = Config.CompressVideos;
+        private bool _encodeVideos;
 
         public bool EncodeVideos
         {
@@ -68,14 +70,19 @@ namespace Resync_Edit.ViewModels
             _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});
         }
 
-        private void ApplyChanges_Execute()
+        private async void ApplyChanges_Execute()
         {
-            SettingsConfig settingsConfig = new SettingsConfig()
-            { CheckForUpdates = CheckForUpdates, CompressVideos = EncodeVideos, UpdateServer = UpdateServer };
-
-            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            File.WriteAllText(Path.Join(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "userConfig.json"), JsonConvert.SerializeObject(settingsConfig));
-
+            string resyncPath = Path.Join(Path.GetTempPath(), "resync");
+            UserConfigHelper configHelper = new UserConfigHelper();
+            await configHelper.SetUserConfig(new SettingConfig()
+            {
+                CheckForUpdates = CheckForUpdates,
+                CompressVideos = EncodeVideos,
+                FolderLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
+                UpdateServer = UpdateServer,
+                ThumbnailLocation = Path.Join(resyncPath, "thumbnails"),
+                InitialStart = false
+            });
             _regionManager.RequestNavigate("ContentRegion", "Library");
             // _regionManager.RequestNavigate("MenuRegion", "MainMenu");
             _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});

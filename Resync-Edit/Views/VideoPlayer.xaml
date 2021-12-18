@@ -8,8 +8,8 @@
       xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:prism="http://prismlibrary.com/"
-      xmlns:local="clr-namespace:Resync_Edit.Views"
-      mc:Ignorable="d" 
+      xmlns:local="clr-namespace:Resync_Edit.Views" xmlns:viewmodels="clr-namespace:Resync_Edit.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:VideoPlayerViewModel}"
+             mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800" Focusable="True"
       x:Name="MediaControl" Loaded="VideoPlayer_OnLoaded">
     <i:Interaction.Triggers>
@@ -33,7 +33,7 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ffme:MediaElement>
-        <Label Grid.Row="0" Content="{Binding CurrentTime, Converter={StaticResource TimeSpanToSecondsConverter}}"></Label>
+        <!-- Label Grid.Row="0" Content="{Binding CurrentTime, Converter={StaticResource TimeSpanToSecondsConverter}}"></-->
         <StackPanel Grid.Row="1" VerticalAlignment="Bottom" Focusable="False">
             <Grid Width="750" VerticalAlignment="Bottom" Focusable="False">
                 <Canvas Width="750" HorizontalAlignment="Center" x:Name="Canvas" Background="Transparent" Opacity="0.7" Height="40">
@@ -73,7 +73,13 @@
                     <Button Background="Transparent" Focusable="False">
                         <ui:FlyoutService.Flyout>
                             <ui:Flyout>
-                                <Slider x:Name="Volume" Width="100" Orientation="Horizontal" Maximum="1" Minimum="0" Height="30" Value="{Binding Volume}"></Slider>
+                                <Slider x:Name="Volume" Width="100" Orientation="Horizontal" Maximum="1" Minimum="0" Height="30" Value="{Binding Volume}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="ValueChanged">
+                                            <prism:InvokeCommandAction Command="{Binding VolumeChangedCommand}"></prism:InvokeCommandAction>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Slider>
                             </ui:Flyout>
                         </ui:FlyoutService.Flyout>
                         <TextBlock FontFamily="Segoe MDl2 Assets" Text="&#xE767;" FontSize="28"></TextBlock>

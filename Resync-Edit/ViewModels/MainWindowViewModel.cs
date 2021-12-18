@@ -12,6 +12,8 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Resync_Edit.Events;
 using Resync_Edit.Views;
+using SyncServiceLibrary;
+using SyncServiceLibrary.Interfaces;
 
 namespace Resync_Edit.ViewModels
 {
@@ -21,14 +23,17 @@ namespace Resync_Edit.ViewModels
 
         private readonly IEventAggregator _eventAggregator;
 
+        private readonly IUserConfigHelper _configHelper;
+
         private DelegateCommand _mainWindowLoaded;
 
         public DelegateCommand MainWindowLoaded => _mainWindowLoaded ??= new DelegateCommand(MainWindow_LoadExecute);
 
-        public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IUserConfigHelper configHelper)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
+            _configHelper = configHelper;
             _eventAggregator.GetEvent<MenuBarEvent>().Subscribe(OnChangeMenuBar);
         }
 
@@ -53,6 +58,12 @@ namespace Resync_Edit.ViewModels
 
         private void MainWindow_LoadExecute()
         {
+            if (_configHelper.GetUserConfig().InitialStart)
+            {
+                _regionManager.RequestNavigate("ContentRegion", "InitialScreen"); // don't set initial start here, only do it after they've set their video path
+                MessageBox.Show("ok");
+                return;
+            }
             string[] commandLineArgs = Environment.GetCommandLineArgs(); // [a-zA-Z]:[\\\/](?:[a-zA-Z0-9]+[\\\/])*([a-zA-Z0-9]+.*)
             commandLineArgs = commandLineArgs.Skip(1).ToArray(); // to only get videos
             if (commandLineArgs.Length < 1)

@@ -18,15 +18,15 @@ namespace SyncServiceLibrary
 
         string currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-        public UserConfig GetUserConfig()
+        public SettingConfig GetUserConfig()
         {
             if (!CheckUserConfig()) CreateUserConfig();
             string userConfigFile = File.ReadAllText(GetConfigLocation()); // here
-            UserConfig userConfig = JsonConvert.DeserializeObject<UserConfig>(userConfigFile);
+            SettingConfig userConfig = JsonConvert.DeserializeObject<SettingConfig>(userConfigFile);
             return userConfig;
         }
 
-        public async Task SetUserConfig(UserConfig config)
+        public async Task SetUserConfig(SettingConfig config)
         {
             string serializedConfig = JsonConvert.SerializeObject(config);
             await File.WriteAllTextAsync(GetConfigLocation(), serializedConfig);
@@ -52,7 +52,8 @@ namespace SyncServiceLibrary
                 CheckForUpdates = true, CompressVideos = false,
                 FolderLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
                 UpdateServer = "https://nevin.cc/resync/update",
-                ThumbnailLocation = Path.Join(resyncPath, "thumbnails")
+                ThumbnailLocation = Path.Join(resyncPath, "thumbnails"),
+                InitialStart = true
             };
             //File.WriteAllText(Path.Join(resyncPath, "userConfig.json"), "{\"CheckForUpdates\": true, \"UpdateServer\": \"https://nevin.cc/resync/update\", \"CompressVideos\": false, \"FolderLocation\": \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyVideos) + "\"}");
             File.WriteAllText(Path.Join(resyncPath, "userConfig.json"), JsonConvert.SerializeObject(settingConfig));
@@ -87,12 +88,18 @@ namespace SyncServiceLibrary
             return Path.Join(resyncPath, "userConfig.json");
         }
 
+        public async Task SetInitialStart()
+        {
+            SettingConfig config = GetUserConfig();
+            config.InitialStart = true;
+            await SetUserConfig(config);
+        }
+
         public static string GetDbPath()
         {
 
             string resyncConfig = Path.Join(Path.GetTempPath(), "resync");
             return Path.Join(resyncConfig, "resyncDbContext.sqlite");
         }
-
     }
 }

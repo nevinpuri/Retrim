@@ -16,6 +16,7 @@ using Resync_Edit.Models;
 using Resync_Edit.Views;
 using SyncServiceLibrary;
 using SyncServiceLibrary.Interfaces;
+using SyncServiceLibrary.Models;
 using Unity;
 
 namespace Resync_Edit
@@ -47,16 +48,13 @@ namespace Resync_Edit
                 configHelper.CreateUserConfig();
             }
 
-            var settings = JsonConvert.DeserializeObject<SettingsConfig>(File.ReadAllText(configHelper.GetConfigLocation()));
+            var settings = JsonConvert.DeserializeObject<SettingConfig>(File.ReadAllText(configHelper.GetConfigLocation()));
             if (settings is null)
             {
                 File.Delete(Path.Join(currentDir, "userConfig.json"));
                 MessageBox.Show("Error: Failed to Parse Config File");
                 return;
             }
-            Config.CheckForUpdates = settings.CheckForUpdates;
-            Config.CompressVideos = settings.CompressVideos;
-            Config.UpdateServer = settings.UpdateServer;
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
@@ -70,6 +68,7 @@ namespace Resync_Edit
             containerRegistry.RegisterForNavigation<MainMenu>();
             containerRegistry.RegisterForNavigation<VideoPlayer>();
             containerRegistry.RegisterForNavigation<Settings>();
+            containerRegistry.RegisterForNavigation<InitialScreen>();
             // containerRegistry.RegisterForNavigation<MenuBar>();
         }
 

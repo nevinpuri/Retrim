@@ -12,5 +12,6 @@ namespace Resync_Edit
         void Pause();
         void Stop();
         void LoadMedia(Uri mediaUri);
+        void SetVolume(double volume);
     }
 }

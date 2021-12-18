@@ -9,12 +9,24 @@ namespace SyncServiceLibrary.Interfaces
 {
     public interface IUserConfigHelper
     {
-        UserConfig GetUserConfig();
+        SettingConfig GetUserConfig();
+
+        Task SetUserConfig(SettingConfig config);
 
         string GetVideoPath();
 
-        Task SetUserConfig(UserConfig config);
-
         string GetThumbnailPath();
+
+        void CreateUserConfig();
+
+        void ResetUserConfig();
+
+        bool CheckUserConfig();
+
+        string GetTempPath();
+
+        string GetConfigLocation();
+
+        Task SetInitialStart();
     }
 }

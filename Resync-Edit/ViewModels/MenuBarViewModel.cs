@@ -21,6 +21,8 @@ using Windows.UI.Notifications;
 using ModernWpf.Controls;
 using Resync_Edit.Models;
 using Resync_Edit.Views;
+using SyncServiceLibrary;
+using SyncServiceLibrary.Models;
 
 namespace Resync_Edit.ViewModels
 {
@@ -91,60 +93,69 @@ namespace Resync_Edit.ViewModels
 
         private async void SaveCopy_Execute()
         {
-            if (CurrentlyLoadedVideo is null || Double.IsNaN(MinThumb) || Double.IsNaN(MaxThumb)) return;
-            SaveFileDialog fileSave = new SaveFileDialog
+            try
             {
-                Title = "Select Location to Save Copy",
-                FileName = $"TRIM - {Path.GetFileName(_currentVideoName)}"
-            };
-            if (fileSave.ShowDialog() == false)
-            {
-                return;
+
+                if (CurrentlyLoadedVideo is null || Double.IsNaN(MinThumb) || Double.IsNaN(MaxThumb)) return;
+                SaveFileDialog fileSave = new SaveFileDialog
+                {
+                    Title = "Select Location to Save Copy",
+                    FileName = $"TRIM - {Path.GetFileName(_currentVideoName)}"
+                };
+                if (fileSave.ShowDialog() == false)
+                {
+                    return;
+                }
+
+                if (fileSave.FileName == "")
+                {
+                    return;
+                }
+
+                var xml =
+                    "<?xml version=\"1.0\"?><toast><visual><binding template=\"ToastText01\"><text id=\"1\">Your Video Has Finished Exporting</text></binding></visual></toast>";
+                var toastXml = new XmlDocument();
+                toastXml.LoadXml(xml);
+                var toast = new ToastNotification(toastXml);
+                // toast.Activated += ToastOnActivated;
+                toast.Activated += (sender, args) => { ToastOnActivated(sender, fileSave.FileName); };
+
+                _eventAggregator.GetEvent<VideoPlayEvent>().Publish(false);
+                _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
+
+                UserConfigHelper configHelper = new UserConfigHelper();
+
+                if (configHelper.GetUserConfig().CompressVideos)
+                {
+                    await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
+                            .UsingMultithreading(true)
+                            .Seek(TimeSpan.FromSeconds(MinThumb))
+                            .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
+                        .OutputToFile(fileSave.FileName, true, options => options
+                            .WithFastStart())
+                        .ProcessAsynchronously();
+                }
+                else
+                {
+                    await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
+                            .UsingMultithreading(true)
+                            .Seek(TimeSpan.FromSeconds(MinThumb))
+                            .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
+                        .OutputToFile(fileSave.FileName, true, options => options
+                            .WithCustomArgument("-c copy")
+                            .WithFastStart())
+                        .ProcessAsynchronously();
+                }
+
+                _eventAggregator.GetEvent<VideoExportingEvent>().Publish(false);
+
+                ToastNotificationManager.CreateToastNotifier("Resync").Show(toast);
+
             }
-
-            if (fileSave.FileName == "")
+            catch (Exception exception)
             {
-                return;
+                MessageBox.Show(exception.Message);
             }
-
-            var xml = "<?xml version=\"1.0\"?><toast><visual><binding template=\"ToastText01\"><text id=\"1\">Your Video Has Finished Exporting</text></binding></visual></toast>";
-            var toastXml = new XmlDocument();
-            toastXml.LoadXml(xml);
-            var toast = new ToastNotification(toastXml);
-            // toast.Activated += ToastOnActivated;
-            toast.Activated += (sender, args) =>
-            {
-                ToastOnActivated(sender, fileSave.FileName);
-            };
-
-            _eventAggregator.GetEvent<VideoPlayEvent>().Publish(false);
-            _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
-
-            if (Config.GetConfig().CompressVideos)
-            {
-                await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
-                        .UsingMultithreading(true)
-                        .Seek(TimeSpan.FromSeconds(MinThumb))
-                        .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
-                    .OutputToFile(fileSave.FileName, true, options => options
-                        .WithFastStart())
-                    .ProcessAsynchronously();
-            }
-            else
-            {
-                await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
-                        .UsingMultithreading(true)
-                        .Seek(TimeSpan.FromSeconds(MinThumb))
-                        .WithDuration(TimeSpan.FromSeconds(MaxThumb)))
-                    .OutputToFile(fileSave.FileName, true, options => options
-                        .WithCustomArgument("-c copy")
-                        .WithFastStart())
-                    .ProcessAsynchronously();
-            }
-
-            _eventAggregator.GetEvent<VideoExportingEvent>().Publish(false);
-
-            ToastNotificationManager.CreateToastNotifier("Resync").Show(toast);
         }
 
         private void ToastOnActivated(ToastNotification sender, object args)

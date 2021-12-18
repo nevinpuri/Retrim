@@ -8,6 +8,7 @@ namespace SyncServiceLibrary.Models
 {
     public class SettingConfig
     {
+        public bool InitialStart { get; set; }
         public bool CheckForUpdates { get; set; }
 
         public string UpdateServer { get; set; }

@@ -36,7 +36,7 @@ namespace Resync_Edit.ViewModels
 
         private bool _pause = true;
 
-        private double _volume;
+        private double _volume = 1;
 
         private string _currentVideo;
 
@@ -236,7 +236,8 @@ namespace Resync_Edit.ViewModels
         private void VolumeChanged_Execute(RoutedPropertyChangedEventArgs<double> e)
         {
             Volume = e.NewValue;
-            MediaElement.Volume = e.NewValue;
+            MediaService.SetVolume(e.NewValue);
+            // MediaElement.Volume = e.NewValue;
         }
 
         private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
@@ -286,6 +287,7 @@ namespace Resync_Edit.ViewModels
         private void MuteCommand_Execute()
         {
             Volume = Volume > 0 ? 0 : 1;
+            MediaService.SetVolume(Volume);
         }
 
         private void MainLoad_Execute(IMediaService mediaService)

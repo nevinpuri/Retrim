@@ -52,6 +52,11 @@ namespace Resync_Edit.Views
             await MyVideoPlayer.Play();
         }
 
+        async void IMediaService.SetVolume(double volume)
+        {
+            MyVideoPlayer.Volume = volume;
+        }
+
         private void VideoPlayer_OnLoaded(object sender, RoutedEventArgs e)
         {
             Focus();
