@@ -13,7 +13,7 @@
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
             <WrapPanel>
                 <TextBox Width="300"></TextBox>
-                <ui:AppBarButton Icon="Like" Label="SymbolIcon"></ui:AppBarButton>
+                <ui:AppBarButton Icon="Folder"></ui:AppBarButton>
             </WrapPanel>
         </StackPanel>
     </Grid>

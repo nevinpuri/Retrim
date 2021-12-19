@@ -27,6 +27,6 @@ namespace SyncServiceLibrary.Interfaces
 
         string GetConfigLocation();
 
-        Task SetInitialStart();
+        Task SetInitialStart(string folderLocation);
     }
 }

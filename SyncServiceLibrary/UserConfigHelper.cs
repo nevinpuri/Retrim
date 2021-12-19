@@ -88,10 +88,11 @@ namespace SyncServiceLibrary
             return Path.Join(resyncPath, "userConfig.json");
         }
 
-        public async Task SetInitialStart()
+        public async Task SetInitialStart(string folderLocation)
         {
             SettingConfig config = GetUserConfig();
-            config.InitialStart = true;
+            config.FolderLocation = folderLocation;
+            config.InitialStart = false;
             await SetUserConfig(config);
         }
 

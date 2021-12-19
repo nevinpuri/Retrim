@@ -60,9 +60,8 @@ namespace Resync_Edit.ViewModels
         {
             if (_configHelper.GetUserConfig().InitialStart)
             {
-                _regionManager.RequestNavigate("ContentRegion", "InitialScreen"); // don't set initial start here, only do it after they've set their video path
-                MessageBox.Show("ok");
-                return;
+                _regionManager.RequestNavigate("ContentRegion", "MainMenu"); // don't set initial start here, only do it after they've set their video path
+                return; // bottom right ok button, or just below with max width of teh text box and the other thing
             }
             string[] commandLineArgs = Environment.GetCommandLineArgs(); // [a-zA-Z]:[\\\/](?:[a-zA-Z0-9]+[\\\/])*([a-zA-Z0-9]+.*)
             commandLineArgs = commandLineArgs.Skip(1).ToArray(); // to only get videos
