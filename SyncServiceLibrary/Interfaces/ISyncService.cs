@@ -9,9 +9,11 @@ namespace SyncServiceLibrary.Interfaces
     {
         public Task<int> QueryAllVideos();
 
+        public Task ReIndexClips();
+
         public Task<List<VideoFile>> GetAllUserClips(string filter);
 
-        public int GenerateAllThumbnails();
+        public Task<int> GenerateAllThumbnails();
 
         public Task<List<string>> GetAllGames();
     }

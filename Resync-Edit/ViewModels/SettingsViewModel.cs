@@ -13,6 +13,7 @@ using Prism.Regions;
 using Resync_Edit.Events;
 using Resync_Edit.Models;
 using SyncServiceLibrary;
+using SyncServiceLibrary.Interfaces;
 using SyncServiceLibrary.Models;
 
 namespace Resync_Edit.ViewModels
@@ -23,6 +24,8 @@ namespace Resync_Edit.ViewModels
         private IRegionManager _regionManager;
 
         private IEventAggregator _eventAggregator;
+
+        private IUserConfigHelper _configHelper;
 
         private bool _checkForUpdates;
 
@@ -52,6 +55,28 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand ResetServerCommand => _resetServerCommand ??= new DelegateCommand(ResetServer_Execute);
 
+        private DelegateCommand _loadCommand;
+
+        public DelegateCommand LoadCommand => _loadCommand ??= new DelegateCommand(Load_Execute);
+
+        private void Load_Execute()
+        {
+            var config = _configHelper.GetUserConfig();
+            CheckForUpdates = config.CheckForUpdates;
+            UpdateServer = config.UpdateServer;
+            EncodeVideos = config.CompressVideos;
+        }
+
+        private DelegateCommand _resetVideoLocationCommand;
+
+        public DelegateCommand ResetVideoLocationCommand =>
+            _resetVideoLocationCommand ??= new DelegateCommand(ResetVideoLocation_Execute);
+
+        private void ResetVideoLocation_Execute()
+        {
+            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
+        }
+
         private DelegateCommand _cancelChangesCommand;
 
         public DelegateCommand CancelChangesCommand =>
@@ -73,8 +98,7 @@ namespace Resync_Edit.ViewModels
         private async void ApplyChanges_Execute()
         {
             string resyncPath = Path.Join(Path.GetTempPath(), "resync");
-            UserConfigHelper configHelper = new UserConfigHelper();
-            await configHelper.SetUserConfig(new SettingConfig()
+            await _configHelper.SetUserConfig(new SettingConfig()
             {
                 CheckForUpdates = CheckForUpdates,
                 CompressVideos = EncodeVideos,
@@ -90,13 +114,14 @@ namespace Resync_Edit.ViewModels
 
         private void ResetServer_Execute()
         {
-            UpdateServer = "https://nevin.cc/resync/update";
+            UpdateServer = "https://resync.to/update";
         }
 
-        public SettingsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public SettingsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IUserConfigHelper configHelper)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
+            _configHelper = configHelper;
         }
     }
 }

@@ -54,8 +54,6 @@ namespace Resync_Edit.ViewModels
 
         private TimeSpan _currentTime;
 
-        private double _templateTime;
-
         private double _seekPosition;
 
         private bool _exporting;
@@ -240,7 +238,7 @@ namespace Resync_Edit.ViewModels
             // MediaElement.Volume = e.NewValue;
         }
 
-        private async void MinThumbChanged_Execute(DragDeltaEventArgs e)
+        private void MinThumbChanged_Execute(DragDeltaEventArgs e)
         {
             if (MinThumb + e.HorizontalChange < MaxThumb && MinThumb + e.HorizontalChange > 0)
             {
@@ -256,7 +254,7 @@ namespace Resync_Edit.ViewModels
             }
         }
 
-        private async void MaxThumbChanged_Execute(DragDeltaEventArgs e)
+        private void MaxThumbChanged_Execute(DragDeltaEventArgs e)
         {
             if (MaxThumb + e.HorizontalChange > MinThumb && MaxThumb + e.HorizontalChange < 747)
             {

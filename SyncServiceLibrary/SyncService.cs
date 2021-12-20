@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Windows.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,10 +45,12 @@ namespace SyncServiceLibrary
                     if (!_clipContext.VideoFiles.Any(b => b.Title == fileName))
                     {
                         allGameAmount++;
-                        _clipContext.VideoFiles.Add(new VideoFile(fileName, game, // make sure to have a check for the timespan from seconds if the bool returned false, so that you can still generate a thumbnail for videos which are under five seconds
+                        var videoFile = new VideoFile(fileName,
+                            game, // make sure to have a check for the timespan from seconds if the bool returned false, so that you can still generate a thumbnail for videos which are under five seconds
                             (new FileInfo(file).Length) / 1024 / 1024, file,
-                        Path.Combine(_configHelper.GetThumbnailPath(), $"{fileName}.png")
-                            )); // for megabytes
+                            Path.Combine(_configHelper.GetThumbnailPath(), $"{fileName}.png")
+                        );
+                        _clipContext.VideoFiles.Add(videoFile); // for megabytes
                     } // make a tutorial for the app in the app itself with hints and popups
                 }
             }
@@ -56,14 +59,34 @@ namespace SyncServiceLibrary
             return allGameAmount;
         }
 
-        public int GenerateAllThumbnails() // todo, make a selective thubmnail generation function so it doesn't have to go through everything to generate all of the thumbnails
+        public async Task ReIndexClips()
+        {
+            var items = await _clipContext.VideoFiles.ToListAsync();
+            foreach (var item in items)
+            {
+                if (!File.Exists(item.VideoLocation))
+                {
+                    var videoFileToDelete =
+                        _clipContext.VideoFiles.SingleOrDefault(e => e.VideoLocation == item.VideoLocation);
+                    if (videoFileToDelete != null)
+                    {
+                        _clipContext.Remove(videoFileToDelete);
+                    }
+                }
+            }
+            await _clipContext.SaveChangesAsync();
+            var allClips = await QueryAllVideos();
+        }
+
+        public async Task<int> GenerateAllThumbnails() // todo, make a selective thubmnail generation function so it doesn't have to go through everything to generate all of the thumbnails
         { // we need to have the thumbnail generation be a function in the wpf app, since I need to call StorageFile.GetThumbnailAsync(), something which I can only call when the wpf application is packaged as an msix package
             int totalGeneratedThumbnails = 0;
             /*
             if (!Directory.Exists("C:\\Users\\Nevin\\Desktop\\resync\\thumbnails"))
                 Directory.CreateDirectory("C:\\Users\\Nevin\\Desktop\\resync\\thumbnails"); // todo: make this get from the config
             */
-            foreach (var videoFile in _clipContext.VideoFiles.ToList())
+            var allClips = await _clipContext.VideoFiles.ToListAsync();
+            foreach (var videoFile in allClips)
             {
                 if (!File.Exists(videoFile.ThumbnailLocation))
                 {

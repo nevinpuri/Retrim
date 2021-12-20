@@ -119,10 +119,10 @@ namespace Resync_Edit.ViewModels
         private async Task<List<VideoFile>> GetAllClips(string filter)
         {
             var currentDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            int syncCount = await _syncService.QueryAllVideos(); // maybe add a timer which blocks navigating on a setinterval type thing
+            await _syncService.ReIndexClips(); // maybe add a timer which blocks navigating on a setinterval type thing
             List<VideoFile>
                 clips = await _syncService.GetAllUserClips(filter); // add a check to see if the clips have a thumbnail
-            _syncService.GenerateAllThumbnails(); // kind of bad code
+            await _syncService.GenerateAllThumbnails(); // kind of bad code
             foreach (var clip in clips) // maybe using a cancellation token on the async methods can help me fix the bug
             {
                 if (!File.Exists(clip.ThumbnailLocation))

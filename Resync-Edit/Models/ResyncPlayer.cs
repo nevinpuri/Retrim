@@ -74,12 +74,12 @@ namespace Resync_Edit.Models
             MediaElement.PositionChanged += MediaElementOnPositionChanged;
         }
 
-        private void MediaElementOnPositionChanged(object? sender, PositionChangedEventArgs e)
+        private void MediaElementOnPositionChanged(object sender, PositionChangedEventArgs e)
         {
             SeekPosition = e.Position.TotalSeconds;
         }
 
-        private void MediaElementOnMediaOpened(object? sender, MediaOpenedEventArgs e)
+        private void MediaElementOnMediaOpened(object sender, MediaOpenedEventArgs e)
         {
             Duration = e.Info.Duration.TotalSeconds;
         }

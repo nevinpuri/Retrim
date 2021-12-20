@@ -51,7 +51,7 @@ namespace SyncServiceLibrary
             {
                 CheckForUpdates = true, CompressVideos = false,
                 FolderLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
-                UpdateServer = "https://nevin.cc/resync/update",
+                UpdateServer = "https://resync.to/update",
                 ThumbnailLocation = Path.Join(resyncPath, "thumbnails"),
                 InitialStart = true
             };

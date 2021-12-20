@@ -52,7 +52,7 @@ namespace Resync_Edit.Views
             await MyVideoPlayer.Play();
         }
 
-        async void IMediaService.SetVolume(double volume)
+        void IMediaService.SetVolume(double volume)
         {
             MyVideoPlayer.Volume = volume;
         }

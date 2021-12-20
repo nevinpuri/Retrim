@@ -2,10 +2,11 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Resync_Edit.Views"
-      xmlns:prism="http://prismlibrary.com/"
-      mc:Ignorable="d" 
+      xmlns:prism="http://prismlibrary.com/" xmlns:viewmodels="clr-namespace:Resync_Edit.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SettingsViewModel}"
+             mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid Margin="20, 10">
@@ -13,7 +14,12 @@
             <RowDefinition Height="9*"></RowDefinition>
             <RowDefinition Height="1*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Loaded">
+                <prism:InvokeCommandAction Command="{Binding LoadCommand}"></prism:InvokeCommandAction>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <StackPanel Grid.Row="0" CanVerticallyScroll="True">
             <Label FontSize="28" Margin="0, 40, 0, 20">Settings</Label>
             <Label>
                 <TextBlock FontSize="20" TextDecorations="Underline">Updates</TextBlock>
@@ -31,6 +37,7 @@
                 <TextBlock FontSize="20" TextDecorations="Underline">Video Settings</TextBlock>
             </Label>
             <CheckBox Content="Encode Videos (May Take Longer to Save)" IsChecked="{Binding EncodeVideos}"></CheckBox>
+            <Button Command="{Binding ResetVideoLocationCommand}" Margin="0, 10" Content="Change Video Folder Location"></Button>
         </StackPanel>
         <WrapPanel Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Center">
             <Button Command="{Binding CancelChangesCommand}" Content="Cancel" Margin="0, 0, 5, 0"></Button>

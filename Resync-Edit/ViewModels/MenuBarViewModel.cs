@@ -22,6 +22,7 @@ using ModernWpf.Controls;
 using Resync_Edit.Models;
 using Resync_Edit.Views;
 using SyncServiceLibrary;
+using SyncServiceLibrary.Interfaces;
 using SyncServiceLibrary.Models;
 
 namespace Resync_Edit.ViewModels
@@ -40,6 +41,8 @@ namespace Resync_Edit.ViewModels
         private IRegionManager _regionManager;
 
         private IEventAggregator _eventAggregator;
+
+        private IUserConfigHelper _configHelper;
 
         public string CurrentlyLoadedVideo
         {
@@ -89,8 +92,6 @@ namespace Resync_Edit.ViewModels
 
         public DelegateCommand SaveCopyCommand => _saveCopyCommand ??= new DelegateCommand(SaveCopy_Execute);
 
-        private string _fileName;
-
         private async void SaveCopy_Execute()
         {
             try
@@ -123,9 +124,7 @@ namespace Resync_Edit.ViewModels
                 _eventAggregator.GetEvent<VideoPlayEvent>().Publish(false);
                 _eventAggregator.GetEvent<VideoExportingEvent>().Publish(true);
 
-                UserConfigHelper configHelper = new UserConfigHelper();
-
-                if (configHelper.GetUserConfig().CompressVideos)
+                if (_configHelper.GetUserConfig().CompressVideos)
                 {
                     await FFMpegArguments.FromFileInput(CurrentlyLoadedVideo, true, options => options
                             .UsingMultithreading(true)
@@ -164,10 +163,11 @@ namespace Resync_Edit.ViewModels
             // make sure there's an event unsubscribe
         }
 
-        public MenuBarViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+        public MenuBarViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IUserConfigHelper configHelper)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
+            _configHelper = configHelper;
             eventAggregator.GetEvent<VideoPlayerEvent>().Subscribe(s =>
             {
                 CurrentlyLoadedVideo = s;
