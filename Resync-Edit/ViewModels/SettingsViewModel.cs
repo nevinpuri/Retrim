@@ -74,7 +74,9 @@ namespace Resync_Edit.ViewModels
 
         private void ResetVideoLocation_Execute()
         {
-            _regionManager.RequestNavigate("ContentRegion", "MainMenu");
+            var navigationParameters = new NavigationParameters();
+            navigationParameters.Add("FromReset", "true");
+            _regionManager.RequestNavigate("ContentRegion", "MainMenu" + navigationParameters.ToString());
         }
 
         private DelegateCommand _cancelChangesCommand;

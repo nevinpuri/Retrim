@@ -16,7 +16,7 @@
         </StackPanel>
         <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <ui:SymbolIcon Symbol="OpenFile" Margin="0, 0, 10, 0"></ui:SymbolIcon>
-            <Label Content="Click here to select your videos directory"></Label>
+            <Label Content="Click to select your videos directory"></Label>
         </WrapPanel>
     </Grid>
 </UserControl>

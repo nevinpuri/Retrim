@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json;
 using SyncServiceLibrary.Interfaces;
 using SyncServiceLibrary.Models;
@@ -44,20 +45,29 @@ namespace SyncServiceLibrary
 
         public void CreateUserConfig()
         {
-            Directory.CreateDirectory(resyncPath);
-            File.Create(Path.Join(resyncPath, "userConfig.json")).Dispose();
-            Directory.CreateDirectory(Path.Join(resyncPath, "thumbnails"));
-            SettingConfig settingConfig = new SettingConfig()
+            try
             {
-                CheckForUpdates = true, CompressVideos = false,
-                FolderLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
-                UpdateServer = "https://resync.to/update",
-                ThumbnailLocation = Path.Join(resyncPath, "thumbnails"),
-                InitialStart = true
-            };
-            //File.WriteAllText(Path.Join(resyncPath, "userConfig.json"), "{\"CheckForUpdates\": true, \"UpdateServer\": \"https://nevin.cc/resync/update\", \"CompressVideos\": false, \"FolderLocation\": \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyVideos) + "\"}");
-            File.WriteAllText(Path.Join(resyncPath, "userConfig.json"), JsonConvert.SerializeObject(settingConfig));
-            File.Copy(Path.Join(currentDir, "resyncDbContext.sqlite"), Path.Join(resyncPath, "resyncDbContext.sqlite"));
+
+                Directory.CreateDirectory(resyncPath);
+                File.Create(Path.Join(resyncPath, "userConfig.json")).Dispose();
+                Directory.CreateDirectory(Path.Join(resyncPath, "thumbnails"));
+                SettingConfig settingConfig = new SettingConfig()
+                {
+                    CheckForUpdates = true, CompressVideos = false,
+                    FolderLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos),
+                    UpdateServer = "https://resync.to/update",
+                    ThumbnailLocation = Path.Join(resyncPath, "thumbnails"),
+                    InitialStart = true
+                };
+                //File.WriteAllText(Path.Join(resyncPath, "userConfig.json"), "{\"CheckForUpdates\": true, \"UpdateServer\": \"https://nevin.cc/resync/update\", \"CompressVideos\": false, \"FolderLocation\": \"" + Environment.GetFolderPath(Environment.SpecialFolder.MyVideos) + "\"}");
+                File.WriteAllText(Path.Join(resyncPath, "userConfig.json"), JsonConvert.SerializeObject(settingConfig));
+                File.Copy(Path.Join(currentDir, "resyncDbContext.sqlite"),
+                    Path.Join(resyncPath, "resyncDbContext.sqlite"));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         public void ResetUserConfig()

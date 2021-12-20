@@ -159,6 +159,11 @@ namespace Resync_Edit.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            if (navigationContext.Parameters["FromReset"] != null)
+            {
+                Loading = true;
+                getVideosTask = Task.Run(() => CommandLoadExecute());
+            }
             getVideosTask ??= Task.Run(() => CommandLoadExecute()); // make sure to program a "refresh videos" button somewhere
         }
 

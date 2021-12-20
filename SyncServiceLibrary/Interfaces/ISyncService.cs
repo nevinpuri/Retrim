@@ -11,6 +11,8 @@ namespace SyncServiceLibrary.Interfaces
 
         public Task ReIndexClips();
 
+        public Task ResetClips();
+
         public Task<List<VideoFile>> GetAllUserClips(string filter);
 
         public Task<int> GenerateAllThumbnails();

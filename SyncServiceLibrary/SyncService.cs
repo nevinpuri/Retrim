@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -76,6 +77,18 @@ namespace SyncServiceLibrary
             }
             await _clipContext.SaveChangesAsync();
             var allClips = await QueryAllVideos();
+        }
+
+        public async Task ResetClips()
+        {
+            try
+            {
+                await _clipContext.Database.ExecuteSqlRawAsync("DELETE FROM VideoFiles");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         public async Task<int> GenerateAllThumbnails() // todo, make a selective thubmnail generation function so it doesn't have to go through everything to generate all of the thumbnails

@@ -5,7 +5,7 @@
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
     <RootNamespace>Resync_Edit</RootNamespace>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Frame-10.ico</ApplicationIcon>
+    <ApplicationIcon>Frame-12.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -30,6 +30,9 @@
     <None Update="Frame-10.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Frame-12.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="placeholder.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -47,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Frame-10.png">
+	  <Resource Include="Frame-10.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

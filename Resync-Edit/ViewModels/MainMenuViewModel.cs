@@ -20,7 +20,7 @@ using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
 namespace Resync_Edit.ViewModels
 {
-    class MainMenuViewModel : BindableBase
+    class MainMenuViewModel : BindableBase, INavigationAware
     {
 
         private IRegionManager _regionManager;
@@ -29,19 +29,24 @@ namespace Resync_Edit.ViewModels
 
         private IUserConfigHelper _configHelper;
 
+        private ISyncService _syncService;
+
+        private bool _fromReset;
+
         private DelegateCommand _fileSelect;
 
         public DelegateCommand FileSelect => _fileSelect ??= new DelegateCommand(FileSelect_Execute);
 
-        public MainMenuViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IUserConfigHelper configHelper)
+        public MainMenuViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IUserConfigHelper configHelper, ISyncService syncService)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
             _configHelper = configHelper;
+            _syncService = syncService;
             _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() {Open = false});
         }
 
-        private void FileSelect_Execute()
+        private async void FileSelect_Execute()
         {
             FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
             folderBrowser.ShowNewFolderButton = true;
@@ -51,8 +56,14 @@ namespace Resync_Edit.ViewModels
                 folderBrowser.ShowNewFolderButton = true;
                 folderBrowser.RootFolder = Environment.SpecialFolder.MyVideos;
                 if (folderBrowser.ShowDialog() != DialogResult.OK) return;
-                _configHelper.SetInitialStart(folderBrowser.SelectedPath);
-                _regionManager.RequestNavigate("ContentRegion", "Library");
+                await _configHelper.SetInitialStart(folderBrowser.SelectedPath);
+                await _syncService.ResetClips();
+                var navigationParameters = new NavigationParameters();
+                if (_fromReset)
+                {
+                    navigationParameters.Add("FromReset", true);
+                }
+                _regionManager.RequestNavigate("ContentRegion", "Library" + navigationParameters.ToString());
                 // _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
             /*
@@ -71,6 +82,23 @@ namespace Resync_Edit.ViewModels
                 // _regionManager.RequestNavigate("MenuRegion", "MenuBar");
             }
             */
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if (navigationContext.Parameters["FromReset"] != null)
+            {
+                _fromReset = true;
+            }
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
         }
 
     }
