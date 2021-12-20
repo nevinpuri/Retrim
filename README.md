@@ -24,6 +24,9 @@ If you want to build Resync-Edit from source, follow these steps:
 * Restore all NuGet Packages
 * Build All
 
+## Windows Protected Your PC Error
+If you see this error, just click "More Info", and then "Run Anyway". The reason you see this error is because not enough people have installed Resync-Edit for Windows to know it's not a virus.
+
 ## Libraries Used
 - [FFMPeg](https://ffmpeg.org/)
 - [FFME.Windows](https://github.com/unosquare/ffmediaelement)
