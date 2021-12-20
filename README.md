@@ -11,6 +11,19 @@ Resync-Edit is meant as a FOSS alternative to the Windows Movie Editor, allowing
 
 ![Demo of Right Click](./assets/right-click.png)
 
+## Getting Started
+Prerequisites
+- You must have Windows 10 1803 or newer.
+- Dotnet Core 5.0 is required.
+
+If you want to download it, head over to the [releases](https://github.com/Nevin1901/Resync-Edit/releases) page.
+
+If you want to build Resync-Edit from source, follow these steps:
+* `git clone https://github.com/Nevin1901/Resync-Edit.git`
+* Open it in Visual Studio
+* Restore all NuGet Packages
+* Build All
+
 ## Libraries Used
 - [FFMPeg](https://ffmpeg.org/)
 - [FFME.Windows](https://github.com/unosquare/ffmediaelement)
