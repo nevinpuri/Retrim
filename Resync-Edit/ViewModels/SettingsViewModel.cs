@@ -61,6 +61,7 @@ namespace Resync_Edit.ViewModels
 
         private void Load_Execute()
         {
+            _eventAggregator.GetEvent<MenuBarEvent>().Publish(new MenuBarEventArgs() { Open = false});
             var config = _configHelper.GetUserConfig();
             CheckForUpdates = config.CheckForUpdates;
             UpdateServer = config.UpdateServer;
