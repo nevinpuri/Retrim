@@ -28,6 +28,7 @@ If you want to build Resync-Edit from source, follow these steps:
 * Build All
 
 ## Libraries Used
+- [InnoSetup](https://jrsoftware.org/isinfo.php)
 - [FFMPeg](https://ffmpeg.org/)
 - [FFME.Windows](https://github.com/unosquare/ffmediaelement)
 - [FFMPegCore](https://github.com/rosenbjerg/FFMpegCore)
