@@ -28,7 +28,6 @@ If you want to build Resync-Edit from source, follow these steps:
 * Build All
 
 ## Libraries Used
-- [InnoSetup](https://jrsoftware.org/isinfo.php)
 - [FFMPeg](https://ffmpeg.org/)
 - [FFME.Windows](https://github.com/unosquare/ffmediaelement)
 - [FFMPegCore](https://github.com/rosenbjerg/FFMpegCore)
@@ -36,6 +35,7 @@ If you want to build Resync-Edit from source, follow these steps:
 - [ModernWpfUI](https://github.com/Kinnara/ModernWpf)
 - [Newtonsoft.Json](https://github.com/Kinnara/ModernWpf)
 - [Prism.Unity](https://github.com/PrismLibrary/Prism)
+- [InnoSetup](https://jrsoftware.org/isinfo.php)
 
 Thanks to all the great people behind these libraries. The project would not be possible without them.
 
