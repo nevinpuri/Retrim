@@ -1,5 +1,6 @@
 # Resync-Edit
 ![Demo Of Resync-Edit](./assets/screenrecord-min.gif)
+
 Resync-Edit is a program which helps you trim your videos. It's primarily meant for use by people who use programs like Nvidia Instant Replay, and AMD ReLive.
 
 Resync-Edit is meant as a FOSS alternative to the Windows Movie Editor, allowing people to instantly trim videos, while NOT Re-Encoding them.
@@ -18,14 +19,13 @@ Prerequisites
 
 If you want to download it, head over to the [releases](https://github.com/Nevin1901/Resync-Edit/releases) page.
 
+If you see "Windows Protected Your PC" while running the installer, just click "More Info", and then "Run Anyway". The reason you see this error is because not enough people have installed Resync-Edit for Windows to know it's not a virus.
+
 If you want to build Resync-Edit from source, follow these steps:
 * `git clone https://github.com/Nevin1901/Resync-Edit.git`
 * Open it in Visual Studio
 * Restore all NuGet Packages
 * Build All
-
-## Windows Protected Your PC Error
-If you see this error, just click "More Info", and then "Run Anyway". The reason you see this error is because not enough people have installed Resync-Edit for Windows to know it's not a virus.
 
 ## Libraries Used
 - [FFMPeg](https://ffmpeg.org/)
