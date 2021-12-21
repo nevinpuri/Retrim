@@ -39,6 +39,9 @@ If you want to build Resync-Edit from source, follow these steps:
 
 Thanks to all the great people behind these libraries. The project would not be possible without them.
 
+## Todo
+- Make the "encode videos" feature save videos in higher quality
+
 ## Bugs
 - Loading bar clips through screen whenever you change folder location
 
