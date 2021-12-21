@@ -43,6 +43,8 @@ Thanks to all the great people behind these libraries. The project would not be 
 - Add "upload to YouTube" feature
 - Add right click context menu in library
 - Make the "encode videos" feature save videos in higher quality
+- Add support for more file types
+- Make library index clips in base folder
 
 ## Bugs
 - Loading bar clips through screen whenever you change folder location
