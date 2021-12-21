@@ -40,6 +40,8 @@ If you want to build Resync-Edit from source, follow these steps:
 Thanks to all the great people behind these libraries. The project would not be possible without them.
 
 ## Todo
+- Add "upload to YouTube" feature
+- Add right click context menu in library
 - Make the "encode videos" feature save videos in higher quality
 
 ## Bugs
