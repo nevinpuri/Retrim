@@ -12,6 +12,9 @@ Resync-Edit is meant as a FOSS alternative to the Windows Movie Editor, allowing
 
 ![Demo of Right Click](./assets/right-click.png)
 
+## Releases
+### [1.0 - Initial Release](https://github.com/Nevin1901/Resync-Edit/releases/tag/1.0)
+
 ## Getting Started
 Prerequisites
 - You must have Windows 10 1803 or newer.
