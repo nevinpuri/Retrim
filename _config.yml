@@ -1,1 +1,5 @@
 theme: jekyll-theme-minimal
+title: Resync-Edit
+description: Instantly trim your clips. A FOSS Video Editor.
+show_downloads: true
+logo: screenrecord-min.gif
