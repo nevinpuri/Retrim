@@ -3,6 +3,8 @@
 
 Resync-Edit is a program which helps you trim your videos. It's primarily meant for use by people who use programs like Nvidia Instant Replay, and AMD ReLive.
 
+If you're coming here from [resync](https://github.com/Nevin1901/resync), the name is similar because I decided resync sounded cooler for the newer project.
+
 Resync-Edit is meant as a FOSS alternative to the Windows Movie Editor, allowing people to instantly trim videos, while NOT Re-Encoding them.
 
 ## Features
